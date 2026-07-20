@@ -1,0 +1,3 @@
+C:\mingw64\bin\cmake.exe -E rm -f CMakeFiles\CmakeExc.dir/objects.a
+C:\mingw64\bin\ar.exe qc CMakeFiles\CmakeExc.dir/objects.a @CMakeFiles\CmakeExc.dir\objects1.rsp
+C:\mingw64\bin\c++.exe -Wall -Wextra "-Wl,-Map=E:/si-vision/Session3 Cmake/build/map/CmakeExc.map" -Wl,--whole-archive CMakeFiles\CmakeExc.dir/objects.a -Wl,--no-whole-archive -o bin\CmakeExc.exe -Wl,--out-implib,libCmakeExc.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\CmakeExc.dir\linkLibs.rsp

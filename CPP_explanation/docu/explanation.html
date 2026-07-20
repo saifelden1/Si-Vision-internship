@@ -1,0 +1,3460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Report: C++ Programming Course</title>
+    <style>
+        /* Modern Academic & Corporate Layout Style */
+        @import url('https://fonts.googleapis.com/css2?family=Georgia&family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #0f172a; /* Navy/Slate Charcoal */
+            --secondary-color: #475569;
+            --accent-color: #0284c7; /* Subtle Blue Accent */
+            --bg-page: #ffffff;
+            --bg-screen: #f1f5f9;
+            --border-color: #cbd5e1;
+            --code-bg: #f8fafc;
+            --box-bg: #f8fafc;
+            --shadow-screen: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        /* Base rules */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-screen);
+            font-family: 'Inter', sans-serif;
+            color: var(--primary-color);
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* A4 Page container on screen */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 25mm 20mm;
+            margin: 20px auto;
+            background: var(--bg-page);
+            box-shadow: var(--shadow-screen);
+            position: relative;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Page Breaks for Printing */
+        .page-break {
+            page-break-after: always;
+            break-after: page;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 6px;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            color: var(--secondary-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 4px;
+        }
+
+        h4 {
+            font-size: 1rem;
+            margin-top: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-family: 'Georgia', serif;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #1e293b;
+            text-align: justify;
+            margin-bottom: 1.2rem;
+        }
+
+        /* List styling */
+        ul, ol {
+            font-family: 'Georgia', serif;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* Cover Page Styling */
+        .cover {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: calc(297mm - 50mm); /* Accounts for page padding */
+            text-align: center;
+            padding: 30mm 0 10mm 0;
+        }
+
+        .cover-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--secondary-color);
+        }
+
+        .cover-title-group {
+            margin: auto 0;
+        }
+
+        .cover-title {
+            font-size: 2.75rem;
+            font-weight: 800;
+            line-height: 1.15;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .cover-subtitle {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+            max-width: 80%;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        .cover-divider {
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-color);
+            margin: 2rem auto;
+        }
+
+        .cover-metadata {
+            width: 100%;
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        .meta-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .meta-label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .meta-value {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Table of Contents */
+        .toc-title {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.05rem;
+        }
+
+        .toc-name {
+            font-weight: 600;
+            background-color: var(--bg-page);
+            padding-right: 0.5rem;
+            z-index: 1;
+        }
+
+        .toc-dots {
+            flex-grow: 1;
+            border-bottom: 1px dotted var(--border-color);
+            margin-bottom: 4px;
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .toc-page {
+            font-weight: 600;
+            background-color: var(--bg-page);
+            padding-left: 0.5rem;
+            z-index: 1;
+        }
+
+        .toc-subitem {
+            padding-left: 1.5rem;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Header and Footer on Pages */
+        .page-header {
+            position: absolute;
+            top: 15mm;
+            left: 20mm;
+            right: 20mm;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+
+        .page-footer {
+            position: absolute;
+            bottom: 15mm;
+            left: 20mm;
+            right: 20mm;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+            border-top: 1px solid #e2e8f0;
+            padding-top: 5px;
+        }
+
+        /* Code Block Styling */
+        pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Consolas', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        code {
+            font-family: 'Consolas', 'Fira Code', monospace;
+            background-color: var(--code-bg);
+            padding: 0.15rem 0.3rem;
+            border-radius: 3px;
+            font-size: 0.9em;
+            border: 1px solid #e2e8f0;
+        }
+
+        pre code {
+            padding: 0;
+            background: transparent;
+            border: none;
+        }
+
+        /* Report Containers / Callout Boxes */
+        .report-box {
+            background-color: var(--box-bg);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-color);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+            page-break-inside: avoid;
+        }
+
+        .report-box-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .report-box.danger {
+            border-left-color: #b91c1c; /* Crimson */
+            background-color: #fef2f2;
+        }
+
+        .report-box.danger .report-box-title {
+            color: #b91c1c;
+        }
+
+        /* Table Styling */
+        table.report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        table.report-table th, table.report-table td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        table.report-table th {
+            background-color: var(--code-bg);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* Image Display */
+        .report-image-container {
+            text-align: center;
+            margin: 2rem 0;
+            page-break-inside: avoid;
+        }
+
+        .report-image {
+            max-width: 100%;
+            max-height: 110mm;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-shadow: var(--shadow-screen);
+        }
+
+        .image-caption {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+            margin-top: 0.6rem;
+            font-style: italic;
+        }
+
+        /* Adjustments for Print Media */
+        @media print {
+            body {
+                background-color: #ffffff;
+                color: #000000;
+            }
+            .page {
+                width: auto;
+                height: auto;
+                min-height: auto;
+                margin: 0;
+                padding: 15mm 0mm; /* Browser handles outer printable margin */
+                box-shadow: none;
+                page-break-after: always;
+                break-after: page;
+            }
+            .page-header {
+                top: 0mm;
+            }
+            .page-footer {
+                bottom: 0mm;
+            }
+            pre, .report-box, .report-image-container, table.report-table {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 {
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE 1: COVER PAGE -->
+    <div class="page page-break">
+        <div class="cover">
+            <div class="cover-header">SIvision Academy</div>
+            
+            <div class="cover-title-group">
+                <div class="cover-title">C++ Programming Course</div>
+                <div class="cover-subtitle">ESW Internship Explanation Notes</div>
+                <div class="cover-divider"></div>
+            </div>
+
+            <div class="cover-metadata">
+                <div class="meta-item">
+                    <div class="meta-label">Prepared By</div>
+                    <div class="meta-value">ESW Intern</div>
+                </div>
+                <div class="meta-item" style="text-align: right;">
+                    <div class="meta-label">Institution</div>
+                    <div class="meta-value">SIvision Academy</div>
+                </div>
+                <div class="meta-item" style="margin-top: 1rem;">
+                    <div class="meta-label">Document Version</div>
+                    <div class="meta-value">Version 1.0 (Draft)</div>
+                </div>
+                <div class="meta-item" style="text-align: right; margin-top: 1rem;">
+                    <div class="meta-label">Date</div>
+                    <div class="meta-value">July 2026</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: TABLE OF CONTENTS -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 20mm;">
+            <h2 class="toc-title">Table of Contents</h2>
+            <ul class="toc-list">
+                <li>
+                    <div class="toc-item">
+                        <span class="toc-name">1. Session 1: C++ Basics & Memory Model</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">3</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.1 Pointer Casting and Memory Access Safety</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">3</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.2 C++ Build & Run Automation (Makefile)</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">4</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.3 VS Code Line-by-Line Debugging Control</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">4</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.4 Advanced Memory & Address Inspection (Case Studies)</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">5</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.5 Passing Pointers by Value vs. Passing by Reference</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">6</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.6 Lvalues vs. Rvalues (Value Categories)</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">7</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.7 Scoped Enumerations (enum class) & Explicit Casting</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">8</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.8 Modifying Function-Local Static Variables from Outside</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">9</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.9 Stack Memory vs. Heap Memory (Key Differences)</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">10</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.10 Procedural Programming vs. Object-Oriented Programming</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">11</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.11 Constructors &amp; Memory Management in OOP (Case Study: MyString)</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">12</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.12 Member Initialization Lists vs. Assignment (Case Study: Employee)</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">13</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.13 Order of Member Initialization in Initializer Lists</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">14</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.14 User-Defined Conversion Limits (One-Step vs. Two-Step Implicit Casting)</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">15</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.15 Delegating Constructors in Modern C++</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">16</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.16 The Danger of Default Copy Constructors with Pointers (Shallow vs. Deep Copy)</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">17</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.17 Lvalues, Rvalues, and the Advantage of Const References</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">18</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.18 Returning Objects by Value: RVO and Move Semantics</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">19</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.19 The this Pointer: Under the Hood of Member Functions</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">20</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.20 Static Members and the Scope Resolution Operator</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">21</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.21 The friend Keyword: Friend Functions and Classes</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">22</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.22 Circular Referencing and Forward Declarations</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">23</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.23 Function Overloading Resolution: How it Works</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">24</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.24 Operator Overloading: The + Operator</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">25</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.25 Overloading the Stream Insertion Operator (&lt;&lt;)</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">26</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.26 Unary Operators: The "Empty" Argument Rule</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">27</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.27 Case Study: Operator Overloading in Containers</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">28</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.28 The "Famous Five": Essential Operator Overloads</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">29</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.29 The Pointer Trap: Using Operators on Pointers</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">30</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.30 The Copy Assignment Operator (operator=)</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">31</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.31 Initialization vs. Assignment</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">32</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 2</span>
+        </div>
+    </div>
+
+    <!-- PAGE 3: CONTENT SECTION 1 -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h2>1. Session 1: C++ Basics & Memory Model</h2>
+            
+            <h3>1.1 Pointer Casting and Memory Access Safety</h3>
+            <p>
+                In C++, type safety protects memory. Understanding how pointers interact with memory allocations on the stack is crucial in Embedded Systems Software (ESW).
+            </p>
+
+            <div class="report-box">
+                <div class="report-box-title">Code Example: Pointer Casting Mismatch</div>
+                <pre><code>#include &lt;iostream&gt;
+#include &lt;stdint.h&gt;
+#include &lt;string.h&gt;
+using namespace std;
+
+void func() {
+}
+
+int main()
+{
+    uint8_t varX = 10;
+    // C-style cast: forcing an 8-bit address into a 32-bit pointer
+    uint32_t* ptr = (uint32_t*)&amp;varX; 
+}</code></pre>
+                <p style="font-size: 0.95rem; font-style: italic; color: var(--secondary-color); margin-top: 0.5rem;">
+                    Note: In this implementation, the address of the 1-byte <code>varX</code> is forcefully cast to a 4-byte <code>uint32_t*</code>, setting up the memory mismatch.
+                </p>
+            </div>
+
+            <h4>Detailed Technical Analysis</h4>
+            <div class="report-box">
+                <div class="report-box-title">Question 1: Effect of Using a 32-Bit Pointer on 8-Bit Data</div>
+                <p>
+                    A pointer's type dictates how many bytes are loaded or stored in memory when dereferencing it. In this scenario, we have a mismatch between the allocated size and the accessed size:
+                </p>
+                <ul>
+                    <li><strong>Dereference Size Mismatch:</strong> The pointer <code>ptr</code> is typed as <code>uint32_t*</code>, informing the compiler that dereferencing accesses a 4-byte (32-bit) space. However, <code>varX</code> is allocated as a single byte (<code>uint8_t</code>).</li>
+                    <li><strong>Out-of-Bounds Memory Read/Write:</strong> When reading or writing to <code>*ptr</code>, the processor accesses the byte occupied by <code>varX</code> plus three adjacent bytes on the stack frame. This is classified as out-of-bounds access.</li>
+                    <li><strong>Stack Corruption:</strong> Overwriting <code>*ptr</code> modifies these adjacent bytes. This corrupts neighboring local variables or return addresses on the stack frame, resulting in unstable program logic.</li>
+                    <li><strong>Hardware Alignment Aborts:</strong> Many RISC microcontrollers (such as ARM Cortex-M processors) require that 32-bit loads and stores occur at memory addresses divisible by 4. If the compiler aligns <code>varX</code> to a non-4-byte boundary, dereferencing <code>ptr</code> will trigger a hardware usage fault (Alignment Fault), crashing the system.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 3</span>
+        </div>
+    </div>
+
+    <!-- PAGE 4: BUILD & DEBUGGING BASICS -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.2 C++ Build & Run Automation (Makefile)</h3>
+            <p>
+                For fast build-and-run cycles, a generic compilation target in the Makefile allows developers to build and execute any single-file C++ binary with debugging symbols in one step:
+            </p>
+            <pre><code># Generic rule to compile and run any C++ file
+# Usage: make my_program -> compiles my_program.cpp and runs my_program
+%: %.cpp
+	g++ -g -Wall -std=c++17 -o $@ $&lt;
+	./$@</code></pre>
+            <ul>
+                <li><strong><code>%</code> (Wildcard Target):</strong> Matches any target name passed to make (e.g., typing <code>make x</code> matches <code>x</code>).</li>
+                <li><strong><code>-g</code> (Debug Symbols):</strong> Instructs the compiler to generate debugging information required by debuggers to read variable names and stack traces.</li>
+                <li><strong><code>$@</code> and <code>$&lt;</code>:</strong> Automatic variables representing the target (executable) and dependency (source file) respectively.</li>
+                <li><strong><code>./$@</code>:</strong> Executes the compiled binary automatically upon successful compilation.</li>
+            </ul>
+
+            <h3>1.3 VS Code Line-by-Line Debugging Control</h3>
+            <p>
+                Using VS Code to debug code step-by-step replaces manual output statement (e.g. <code>std::cout</code>) debugging and gives full control over execution states:
+            </p>
+            <div class="report-box">
+                <div class="report-box-title">Key Debugging Procedures</div>
+                <ul>
+                    <li><strong>Set a Breakpoint:</strong> Click to the left of the line numbers in VS Code. A red dot indicates the execution will pause before running that line.</li>
+                    <li><strong>Start Session (<code>F5</code>):</strong> Starts the debugger and runs the compiled C++ executable up to the first breakpoint.</li>
+                    <li><strong>Step Over (<code>F10</code>):</strong> Runs the current line of code and moves directly to the next line without stepping inside function calls.</li>
+                    <li><strong>Step Into (<code>F11</code>):</strong> If the current line is a function call, jumps inside the function to debug it line-by-line.</li>
+                    <li><strong>Step Out (<code>Shift + F11</code>):</strong> Finishes running the current function and returns control to the caller.</li>
+                    <li><strong>Stop Debugging (<code>Shift + F5</code>):</strong> Terminates the debug session immediately.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 4</span>
+        </div>
+    </div>
+
+    <!-- PAGE 5: ADVANCED MEMORY INSPECTION -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.4 Advanced Memory & Address Inspection</h3>
+            <p>
+                Analyzing memory representations directly via debugger terminals and hex editors allows us to visualize boundary crossings and stack corruption events.
+            </p>
+
+            <div class="report-box">
+                <div class="report-box-title">1.4.1 Case Study: Column Boundary Crossing (Eclipse IDE)</div>
+                <p>
+                    When writing 4 bytes through a pointer pointing to the last byte of an aligned memory block, the write operation spans across columns.
+                </p>
+                <div class="report-box">
+                    <div class="report-box-title">Source Code: Memory Corruption Implementation</div>
+                    <pre><code>int main()
+{
+    uint8_t varX = 10; // Allocated size: 1 Byte
+    uint32_t* ptr = (uint32_t*)&amp;varX; // C-Style Cast
+    *ptr = 0xABCDABCD; // Overwrites 4 Bytes (3 bytes out of bounds)
+}</code></pre>
+                </div>
+
+                <div class="report-box">
+                    <div class="report-box-title">Eclipse Memory View Representation (Target Address: 0xFFFFCBD7)</div>
+                    <p>
+                        Below is a textual rendering of the debugger's memory panel demonstrating how the 4-byte write cross alignment boundaries:
+                    </p>
+                    <table class="report-table" style="font-family: 'Consolas', monospace; font-size: 0.9rem; text-align: center;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">Address</th>
+                                <th style="text-align: center;">Bytes 0 - 3</th>
+                                <th style="text-align: center; background-color: #fee2e2; color: #b91c1c;">Bytes 4 - 7 (varX boundary)</th>
+                                <th style="text-align: center; background-color: #fee2e2; color: #b91c1c;">Bytes 8 - B (Adjacent stack)</th>
+                                <th style="text-align: center;">Bytes C - F</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: left; font-weight: bold;">00000000FFFFCBD0</td>
+                                <td>40CCFFFF</td>
+                                <td style="background-color: #fef2f2; color: #b91c1c; font-weight: bold;">000000<span style="background-color: #fecaca; padding: 2px 4px; border-radius: 3px;">CD</span></td>
+                                <td style="background-color: #fef2f2; color: #b91c1c; font-weight: bold;"><span style="background-color: #fecaca; padding: 2px 4px; border-radius: 3px;">ABCDAB</span>FF</td>
+                                <td>00000000</td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: left; font-weight: bold;">00000000FFFFCBE0</td>
+                                <td>E0CFFFFF</td>
+                                <td>00000000</td>
+                                <td>2DAF0480</td>
+                                <td>01000000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="font-size: 0.9rem; font-style: italic; margin-top: 0.8rem; color: var(--secondary-color);">
+                        Note: The byte at address <code>0xFFFFCBD7</code> receives the LSB <code>CD</code>. Bytes at <code>D8</code>, <code>D9</code>, and <code>DA</code> receive <code>AB</code>, <code>CD</code>, and <code>AB</code> respectively, overwriting adjacent stack values.
+                    </p>
+                </div>
+                <p>
+                    <strong>Explanation:</strong> In the memory layout (Figure 1.2), the target address <code>0xFFFFCBD7</code> sits at the final byte boundary of Column 2 (<code>4-7</code>). Writing <code>0xABCDABCD</code> starting at <code>0xFFFFCBD7</code> results in:
+                </p>
+                <ul>
+                    <li><strong>Column 2 (D4-D7) gets `000000CD`</strong>: Byte 0 (LSB `CD`) overwrites address `D7`.</li>
+                    <li><strong>Column 3 (D8-DB) gets `ABCDABFF`</strong>: Bytes 1, 2, and 3 (`AB`, `CD`, `AB`) overwrite addresses `D8`, `D9`, and `DA`. The byte `DB` is untouched and retains its pre-existing value (`FF`).</li>
+                </ul>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">1.4.2 Case Study: Visualizing Stack Corruption (VS Code GDB Hex View)</div>
+                <p>
+                    This debugger snapshot (Figure 1.3) shows the direct side-effect of casting pointers and overwriting memory in little-endian.
+                </p>
+                <div class="report-box">
+                    <div class="report-box-title">VS Code Debugger State: Locals &amp; Watch Expression Values</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-family: monospace; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                        <div style="background-color: #f8fafc; border: 1px solid #cbd5e1; padding: 12px; border-radius: 4px; border-left: 4px solid #0284c7;">
+                            <strong style="color: var(--secondary-color);">VARIABLES &gt; Locals</strong><br>
+                            &nbsp;&nbsp;VarX = <span style="color: #b91c1c; font-weight: bold;">205</span> (Decoded decimal value of 0xCD)<br>
+                            &nbsp;&nbsp;Ptr = 0x5ffe87
+                        </div>
+                        <div style="background-color: #f8fafc; border: 1px solid #cbd5e1; padding: 12px; border-radius: 4px; border-left: 4px solid #0284c7;">
+                            <strong style="color: var(--secondary-color);">WATCH PANEL</strong><br>
+                            &nbsp;&nbsp;VarX = <span style="color: #b91c1c; font-weight: bold;">205</span><br>
+                            &nbsp;&nbsp;&amp;VarX = 0x5ffe87
+                        </div>
+                    </div>
+
+                    <div class="report-box-title">VS Code GDB Hex Memory Inspection View</div>
+                    <pre style="background-color: #1e1e1e; color: #d4d4d4; font-family: 'Consolas', monospace; border-left: 4px solid #b91c1c; padding: 15px; font-size: 0.85rem; line-height: 1.4;">
+Memory Monitor address: <span style="color: #4fc1ff;">0x00000000005ffe87</span>
+
+Offset   00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F   Decoded Bytes
+----------------------------------------------------------------------------------
+<span style="color: #4fc1ff;">5ffe87</span>:  <span style="color: #f44747; font-weight: bold;">cd ab cd ab</span> 00 00 00 00 00 00 10 ff 5f 00 00 00   í « í « ....ÿ_...
+<span style="color: #4fc1ff;">5ffe97</span>:  00 40 13 7e ef f6 7f 00 00 01 00 00 00 00 00 00   .@.~ïö..........
+<span style="color: #4fc1ff;">5ffea7</span>:  00 08 90 7e ef f6 7f 00 00 00 00 00 00 00 00 00   ...~ïö..........</pre>
+                </div>
+                <ul>
+                    <li><strong>Debugger Locals and Watch Panel:</strong> The value of <code>VarX</code> is evaluated as **`205`** instead of `10`. This is because the LSB `CD` of `0xABCDABCD` overwrote `VarX`'s address (`0x5ffe87`). In decimal, `0xCD` is exactly `205`.</li>
+                    <li><strong>Memory Inspector Dump:</strong> The dump displays four corrupted bytes: `cd ab cd ab` starting from `0x5ffe87`. Addresses `0x5ffe88` to `0x5ffe8a` belong to adjacent stack frames, demonstrating out-of-bounds corruption.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 5</span>
+        </div>
+    </div>
+
+    <!-- PAGE 6: POINTERS BY VALUE VS. REFERENCES -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.5 Passing Pointers by Value vs. Passing by Reference</h3>
+            <p>
+                C++ provides different modes for passing pointer variables into functions. Understanding pointer variables as stack parameters defines whether a redirection inside a function affects the caller's pointer.
+            </p>
+
+            <div class="report-box">
+                <div class="report-box-title">Code Implementation: Pointer Redirection by Reference</div>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+int gVar = 85; // Global variable (85 in decimal / 0x55 in hex)
+
+// Function receives a reference to a pointer (alias of ptrX)
+void func(int*&amp; ptr) {
+    ptr = &amp;gVar; // Directly changes the caller's pointer address
+}
+
+int main()
+{
+    int* ptrX = nullptr; 
+    func(ptrX);          // Pass ptrX by reference
+    
+    // Prints 85, showing ptrX now successfully points to gVar
+    cout &lt;&lt; *ptrX &lt;&lt; endl; 
+    return 0;
+}</code></pre>
+                <p style="font-size: 0.95rem; font-style: italic; color: var(--secondary-color); margin-top: 0.5rem;">
+                    Explanation: When <code>func</code> is defined with <code>int*&amp; ptr</code>, it receives a reference to the pointer itself rather than a copy. Thus, the redirection <code>ptr = &amp;gVar</code> modifies <code>ptrX</code> in the caller's frame, preventing a null dereference crash.
+                </p>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">1.5.1 Passing by Value (int* ptr)</div>
+                <p>
+                    When a pointer is passed by value, a copy of the pointer (which stores an address) is pushed onto the function's stack frame:
+                </p>
+                <ul>
+                    <li><strong>Indirection Limit:</strong> Modifying the data pointed to (e.g., <code>*ptr = 20</code>) modifies the original caller's data because the address is identical.</li>
+                    <li><strong>Redirection Isolation:</strong> Modifying the pointer address itself (e.g., <code>ptr = &amp;gVar</code>) only updates the local copy. The original pointer in <code>main()</code> is untouched and remains <code>nullptr</code>, triggering a crash on dereference after the call.</li>
+                </ul>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">1.5.2 Passing by Reference (int*&amp; ptr)</div>
+                <p>
+                    Passing a pointer by reference binds the parameter as a direct alias of the caller's original pointer variable:
+                </p>
+                <ul>
+                    <li><strong>Direct Redirection:</strong> Writing <code>ptr = &amp;gVar;</code> directly overwrites the pointer variable in the caller's stack frame (e.g., <code>ptrX</code>).</li>
+                    <li><strong>Post-Call Success:</strong> Upon returning, the caller's pointer points directly to the new variable, allowing safe dereferencing.</li>
+                </ul>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Why Modern C++ Prefers References Over Legacy Pointers</div>
+                <p>
+                    In modern C++ engineering, using references (<code>Type&amp;</code>) is standard practice, leaving pointers as a legacy C-style mechanism. Key advantages include:
+                </p>
+                <ul>
+                    <li><strong>Null Safety (No Null Checks):</strong> By language design, a reference is an alias of an existing object and **cannot be null**. Inside a function, you do not need boilerplate null checking (<code>if (ptr != nullptr)</code>) before using it, preventing null pointer crashes.</li>
+                    <li><strong>Guaranteed Address Validity:</strong> A reference must be initialized immediately upon creation and cannot be rebound to another address later. The compiler ensures it always binds to a valid memory location.</li>
+                    <li><strong>Syntactic Simplicity:</strong> The caller does not need to pass addresses with <code>&amp;</code>, and the callee does not need to dereference using <code>*</code>, making the API cleaner and easier to read.</li>
+                </ul>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">1.5.3 Binding Restrictions: References and Temporary Objects (Case Study)</div>
+                <p>
+                    Understanding how temporary variables bind to references is crucial. Below is a comparative breakdown of Scenario 1 (passing an Lvalue), Scenario 2 (attempting to pass an Rvalue to a non-const Lvalue reference), and Scenario 3 (passing an Rvalue to a const Lvalue reference).
+                </p>
+
+                <!-- Comparison Cards Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 1.5rem 0;">
+                    <!-- Scenario 1: Valid Lvalue Reference -->
+                    <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid #16a34a; padding: 15px; border-radius: 4px;">
+                        <h4 style="color: #16a34a; margin-top: 0; display: flex; align-items: center; gap: 6px;">
+                            <span style="font-size: 1.25rem;">✔</span> Scenario 1: Named Lvalue Reference
+                        </h4>
+                        <pre style="background-color: #ffffff; border: 1px solid #cbd5e1; font-size: 0.85rem; padding: 8px;"><code>void copyString(string&amp; str);
+
+string testString = "Test"; // Lvalue
+copyString(testString);     // Valid</code></pre>
+                        <ul style="font-size: 0.9rem; padding-left: 1.2rem; margin-bottom: 0;">
+                            <li><strong>Type:</strong> <code>testString</code> is a named variable stored at a persistent address (e.g., <code>0xabc123</code>).</li>
+                            <li><strong>Binding:</strong> The Lvalue reference <code>string&amp; str</code> binds directly to <code>testString</code>.</li>
+                            <li><strong>Stack State:</strong> Safe. No temporary variable is created or destroyed.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Scenario 2: Invalid Rvalue to non-const Lvalue Ref -->
+                    <div style="background-color: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid #dc2626; padding: 15px; border-radius: 4px;">
+                        <h4 style="color: #dc2626; margin-top: 0; display: flex; align-items: center; gap: 6px;">
+                            <span style="font-size: 1.25rem;">✘</span> Scenario 2: Unsafe Rvalue Binding (Fails)
+                        </h4>
+                        <pre style="background-color: #ffffff; border: 1px solid #cbd5e1; font-size: 0.85rem; padding: 8px;"><code>void copyString(string&amp; str);
+
+// Compile Error: Cannot bind non-const lvalue
+// reference to temporary object!
+copyString("Literals");</code></pre>
+                        <ol style="font-size: 0.9rem; padding-left: 1.2rem; margin-bottom: 0;">
+                            <li>Compiler creates a temporary <code>std::string</code> object on the stack to hold <code>"Literals"</code>.</li>
+                            <li>Passes its address to <code>copyString</code>.</li>
+                            <li>The temporary variable is destroyed at the end of the full expression (semicolon).</li>
+                            <li>If this bound, <code>str</code> would hold a <strong>dangling reference</strong> to a destroyed object. Therefore, C++ forbids it.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Scenario 3: Valid Const Reference (Lifetime Extension) -->
+                <div style="background-color: #f0f9ff; border: 1px solid #bae6fd; border-left: 4px solid #0284c7; padding: 15px; border-radius: 4px; margin-bottom: 1.5rem;">
+                    <h4 style="color: #0284c7; margin-top: 0; display: flex; align-items: center; gap: 6px;">
+                        <span style="font-size: 1.25rem;">✔</span> Scenario 3: Const Lvalue Reference (Lifetime Extension)
+                    </h4>
+                    <pre style="background-color: #ffffff; border: 1px solid #cbd5e1; font-size: 0.85rem; padding: 8px;"><code>void copyString(const string&amp; str); // Notice the const keyword
+
+copyString("Literals"); // Valid!</code></pre>
+                    <ul style="font-size: 0.9rem; padding-left: 1.2rem; margin-bottom: 0;">
+                        <li><strong>Mechanism:</strong> The compiler creates a temporary <code>std::string</code> and binds it to <code>const string&amp; str</code>.</li>
+                        <li><strong>Lifetime Extension:</strong> By C++ rules, binding a temporary object to a **const reference** extends the lifetime of the temporary to match the lifetime of the reference (in this case, for the duration of the function call).</li>
+                        <li><strong>Safety:</strong> Since the temporary object cannot be modified through the <code>const</code> reference, it is safe to read, and it will only be destroyed when the function call returns.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 6</span>
+        </div>
+    </div>
+
+    <!-- PAGE 7: LVALUES VS RVALUES -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.6 Lvalues vs. Rvalues (Value Categories)</h3>
+            <p>
+                Every C++ expression belongs to a value category. The distinction between Lvalues and Rvalues determines how objects are bound to references, memory lifetimes, and whether move semantics can be applied.
+            </p>
+
+            <div class="report-box">
+                <div class="report-box-title">1.6.1 Lvalues (Locator Values)</div>
+                <p>
+                    An **Lvalue** represents an object that occupies an identifiable location in memory (has a persistent address):
+                </p>
+                <ul>
+                    <li><strong>Address-of Test:</strong> You can retrieve its memory address using the address-of operator (<code>&amp;</code>).</li>
+                    <li><strong>Lifespan:</strong> Persists beyond the expression that evaluated it.</li>
+                    <li><strong>Examples:</strong> Variable names (e.g., <code>int x</code>), reference aliases, pointer dereferences, array indexes.</li>
+                </ul>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">1.6.2 Rvalues (Temporary / Right-Hand Values)</div>
+                <p>
+                    An **Rvalue** represents a temporary value that does not have a persistent address in memory:
+                </p>
+                <ul>
+                    <li><strong>Address-of Test:</strong> You **cannot** take its address. Expressions like <code>&amp;10</code> or <code>&amp;(a+b)</code> fail at compile-time.</li>
+                    <li><strong>Lifespan:</strong> Destroyed immediately at the end of the statement/expression.</li>
+                    <li><strong>Examples:</strong> Numerical/literal values (e.g., <code>10</code>, <code>3.14</code>), intermediate arithmetic expressions (e.g., <code>x + y</code>), or temporary objects returned by functions.</li>
+                </ul>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">1.6.3 Lvalue References (&amp;) vs. Rvalue References (&amp;&amp;)</div>
+                <p>
+                    C++ distinguishes between references that bind to persistent objects versus temporary objects:
+                </p>
+                <ol>
+                    <li><strong>Lvalue References (<code>T&amp;</code>):</strong> Bind only to Lvalues.
+                        <pre style="margin: 0.5rem 0;"><code>int x = 10;
+int&amp; lref = x;   // Valid
+int&amp; lref2 = 10; // Compile Error (cannot bind non-const to Rvalue)</code></pre>
+                        *Note: Const Lvalue references (<code>const T&amp;</code>) are allowed to bind to Rvalues to extend temporary object lifetimes.*
+                    </li>
+                    <li><strong>Rvalue References (<code>T&&</code>):</strong> Introduce in C++11 to bind exclusively to Rvalues (temporaries).
+                        <pre style="margin: 0.5rem 0;"><code>int&amp;&amp; rref = 10; // Valid
+int&amp;&amp; rref2 = x; // Compile Error (cannot bind Rvalue reference to Lvalue)</code></pre>
+                    </li>
+                </ol>
+                <p>
+                    <strong>Significance in Systems Coding:</strong> Rvalue references form the foundation of **Move Semantics** (<code>std::move</code>). It allows the compiler to transfer ownership of resources (like heap-allocated memory buffers) from temporary objects directly to new objects instead of performing expensive copy allocations.
+                </p>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 7</span>
+        </div>
+    </div>
+
+    <!-- PAGE 8: ENUM CLASS AND EXPLICIT CASTING -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.7 Scoped Enumerations (enum class) & Explicit Casting</h3>
+            <p>
+                In standard C, enumerations (`enum`) are unscoped, meaning they pollute their enclosing namespace. Modern C++ introduces scoped enumerations (`enum class`) to enforce compile-time scope safety.
+            </p>
+
+            <div class="report-box">
+                <div class="report-box-title">Why we need Scoped Enumerations (enum class)</div>
+                <p>
+                    Traditional C-style enums leak their enumerators directly into the outer scope, which can cause compile-time name collisions:
+                </p>
+                <pre><code>enum Colors { RED, GREEN, BLUE };
+enum TrafficLight { RED, YELLOW, GREEN }; // Error: RED and GREEN already declared!</code></pre>
+                <p>
+                    By using <code>enum class</code>, the enumerators are scoped within the class namespace, preventing collisions:
+                </p>
+                <pre><code>enum class Colors : uint8_t { RED, GREEN, BLUE };
+enum class TrafficLight : uint8_t { RED, YELLOW, GREEN }; // Complies perfectly!</code></pre>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">The Need for Explicit Type Casting (static_cast)</div>
+                <p>
+                    Unlike traditional enums, scoped enums are strongly typed and **do not** implicitly convert to integers:
+                </p>
+                <pre><code>Colors myColor = Colors::RED;
+int value = myColor; // Compile Error: No implicit conversion!</code></pre>
+                <p>
+                    To print a scoped enum value, write to a hardware register, or use it as an array index, you must explicitly cast it using <code>static_cast</code>:
+                </p>
+                <pre><code>// Correct conversion using static_cast
+int integerColor = static_cast&lt;int&gt;(myColor);
+std::cout &lt;&lt; static_cast&lt;int&gt;(Colors::RED) &lt;&lt; std::endl;</code></pre>
+                <p>
+                    <strong>Why this is important in ESW:</strong> <code>static_cast</code> ensures that low-level hardware accesses or printing conversions are visible and compile-time verified, maintaining safety boundaries.
+                </p>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Explicit Casting: Primitive to User-Defined Types</div>
+                <p>
+                    Another common use case for <code>static_cast</code> is converting primitive types (such as integers from user input, configuration registers, or communication buses) to user-defined enumeration types:
+                </p>
+                <pre><code>enum Actions {
+    ADD,
+    SUBTRACT,
+};
+
+int main() {
+    int rawChoice = 0;
+    std::cin &gt;&gt; rawChoice; // e.g. User enters 0 or 1
+
+    // Convert raw integer input to Actions enum safely using static_cast
+    Actions parsedAction = static_cast&lt;Actions&gt;(rawChoice);
+
+    if (parsedAction == ADD) {
+        // ... perform addition ...
+    } else if (parsedAction == SUBTRACT) {
+        // ... perform subtraction ...
+    }
+}</code></pre>
+                <p>
+                    <strong>Key Advantage:</strong> This explicit conversion forces the compiler to verify that the types are compatible, and it highlights the boundary transition where unsafe primitive types enter typed code paths, preventing bugs and enforcing safety.
+                </p>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 8</span>
+        </div>
+    </div>
+
+    <!-- PAGE 9: MODIFYING STATIC VARIABLES VIA RETURN BY REFERENCE -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.8 Modifying Function-Local Static Variables from Outside</h3>
+            <p>
+                C++ reference returns allow functions to return Lvalues. When combined with local <code>static</code> variables, this lets developers safely inspect and modify persistent private function states from the outside.
+            </p>
+
+            <div class="report-box">
+                <div class="report-box-title">Technical Mechanism and Code Example</div>
+                <p>
+                    A local <code>static</code> variable resides in the static data segment of the application memory. Its lifetime matches the duration of the program, making it safe to return its reference:
+                </p>
+                <pre><code>#include &lt;iostream&gt;
+
+int&amp; getStaticVar() {
+    static int myStaticVal = 100; // Stored in static data segment (persists across calls)
+    return myStaticVal;           // Returns an Lvalue reference (int&amp;)
+}</code></pre>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">How to Access and Modify from Outside</div>
+                <p>
+                    Because the function returns an Lvalue reference (<code>int&amp;</code>), the function call itself acts as a variable name:
+                </p>
+                <ol>
+                    <li><strong>Direct Left-Hand Side Assignment:</strong>
+                        <pre style="margin: 0.5rem 0;"><code>getStaticVar() = 200; // Directly updates the static variable to 200</code></pre>
+                    </li>
+                    <li><strong>Binding a Local Reference:</strong>
+                        <pre style="margin: 0.5rem 0;"><code>int&amp; myRef = getStaticVar();
+myRef++;  // Increments the internal static variable to 201
+myRef--;  // Decrements the internal static variable back to 200</code></pre>
+                    </li>
+                    <li><strong>The Copy Trap (Pass by Value):</strong>
+                        <pre style="margin: 0.5rem 0;"><code>int myCopy = getStaticVar(); // Copies the value 200 into stack variable myCopy
+myCopy++; // Only increments myCopy. The internal static variable is unaffected!</code></pre>
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 9</span>
+        </div>
+    </div>
+
+    <!-- PAGE 10: STACK VS HEAP MEMORY -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.9 Stack Memory vs. Heap Memory (Key Differences)</h3>
+            <p>
+                In C++ systems programming, managing where variables reside is crucial. The compiler allocates memory across two primary runtime segments: the Stack and the Heap.
+            </p>
+
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Stack Memory</th>
+                        <th>Heap Memory</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Allocation</strong></td>
+                        <td>Automatic (by CPU / Compiler)</td>
+                        <td>Manual (by Developer via <code>new</code>/<code>delete</code> or smart pointers)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Speed</strong></td>
+                        <td>Extremely fast (simple pointer movement)</td>
+                        <td>Slower (OS searches for free memory chunks)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lifetime</strong></td>
+                        <td>Strictly tied to variable scope <code>{}</code></td>
+                        <td>Dynamic (survives until explicitly freed)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Safety</strong></td>
+                        <td>Safe from leaks; risk of Stack Overflow</td>
+                        <td>Risk of memory leaks and dangling pointers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Structure</strong></td>
+                        <td>Contiguous memory blocks</td>
+                        <td>Fragmented / scattered blocks</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="report-box">
+                <div class="report-box-title">Code Example: Stack vs. Heap Allocation</div>
+                <pre><code>int main()
+{
+    // 1. Stack Allocation (Automatic Memory Management)
+    int staticArray[5] = { 1, 2, 3, 4, 5 }; // Resides in stack frame, automatically reclaimed
+
+    // 2. Heap Allocation (Manual Memory Management)
+    int* dynamicArray = new int[5]; // Allocated on the Heap
+    delete[] dynamicArray;          // Must be manually deleted to avoid memory leaks
+
+    int* var = new int;            // Allocated on the Heap
+    delete var;                    // Must be manually deleted
+}</code></pre>
+                <p style="font-size: 0.95rem; font-style: italic; color: var(--secondary-color); margin-top: 0.5rem;">
+                    Note: As shown in this code, memory allocated on the stack automatically deallocates when the current scope ends, whereas heap allocations remain active until explicitly freed with <code>delete</code> or <code>delete[]</code>.
+                </p>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Stack Memory Mechanics</div>
+                <p>
+                    When a function is called, a stack frame is pushed. It stores the function's arguments and local variables. Once the function exits, the stack pointer shifts back, immediately reclaiming all space:
+                </p>
+                <pre><code>void process() {
+    int val = 10; // Stack-allocated
+} // val is automatically cleaned up here</code></pre>
+                <p>
+                    <strong>Dangling References:</strong> Because stack frames are reclaimed, returning a pointer or reference to a local stack variable causes undefined behavior and crashes:
+                </p>
+                <pre><code>int&amp; getStackRef() {
+    int temp = 5;
+    return temp; // CRITICAL BUG: Returns reference to destroyed stack variable!
+}</code></pre>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Heap Memory Mechanics</div>
+                <p>
+                    The heap provides a large pool of memory. Allocations persist across function lifetimes, making it safe to return pointers or references to heap-allocated variables:
+                </p>
+                <pre><code>int* getHeapPointer() {
+    int* val = new int(10); // Allocated on the heap
+    return val; // Safe: the integer persists after getHeapPointer exits
+}</code></pre>
+                <p>
+                    <strong>Developer Responsibility:</strong> Unlike the stack, heap allocations must be manually cleaned up. Failing to call <code>delete</code> leads to memory leaks, which can exhaust RAM in long-running embedded systems.
+                </p>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 10</span>
+        </div>
+    </div>
+
+    <!-- PAGE 11: PROCEDURAL VS OBJECT-ORIENTED -->
+    <div class="page">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.10 Procedural Programming vs. Object-Oriented Programming</h3>
+            <p>
+                C++ supports multiple programming paradigms. The transition from legacy Procedural (structured) code to Object-Oriented Programming (OOP) enhances design safety, maintenance, and structure in complex software architectures.
+            </p>
+
+            <div class="report-box">
+                <div class="report-box-title">1.10.1 Procedural Paradigm (Separation of Data and Action)</div>
+                <p>
+                    Procedural programming organizes code around actions, procedures, or functions. The raw state (data) is stored in variables or structures (`struct`) and passed as arguments to separate, global functions:
+                </p>
+                <pre><code>struct BankAccount {
+    std::string owner;
+    double balance;
+};
+
+void deposit(BankAccount&amp; account, double amount) {
+    if (amount &gt; 0) {
+        account.balance += amount;
+    }
+}</code></pre>
+                <p>
+                    <strong>The Security Mismatch:</strong> In procedural design, raw struct attributes are fully public. Any module in the codebase can bypass the `deposit` validation function and corrupt the state directly (e.g. <code>account.balance = -999999.0;</code>).
+                </p>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Procedural Type Safety Hazard (Void Pointer Example)</div>
+                <p>
+                    In procedural C programming, developers often bypass type safety restrictions using generic void pointers (<code>void*</code>). This can lead to silent, compile-time permitted runtime bugs:
+                </p>
+                <pre><code>struct I2CData {
+    // I2C specific data fields
+};
+
+struct UARTData {
+    // UART specific data fields
+};
+
+// Generic transmission function accepting any pointer
+void sendUART(void* ptr) {
+    // Cast and interpret ptr as UARTData
+    UARTData* uart = static_cast&lt;UARTData*&gt;(ptr);
+    // ... transmit data ...
+}
+
+int main() {
+    UARTData correctObject;
+    sendUART(&amp;correctObject); // Works as expected
+
+    I2CData object;
+    sendUART(&amp;object); // DANGER: Compiles with NO errors, but crashes/corrupts at runtime!
+}</code></pre>
+                <p>
+                    <strong>Why this is a problem:</strong> Because <code>sendUART</code> accepts a generic <code>void*</code>, the compiler cannot enforce type safety. It will happily compile code that passes a pointer to <code>I2CData</code> to a function expecting <code>UARTData</code>, leading to memory corruption or crashes. OOP resolves this through strict typing, method encapsulation, or polymorphism/interfaces.
+                </p>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">1.10.2 OOP Paradigm (Data and Actions Bundled in Class)</div>
+                <p>
+                    OOP models programs around **Objects**—instances of **Classes** that combine data (attributes) and logic (methods) together into a single unit. It addresses procedural vulnerabilities through two core tenets:
+                </p>
+                
+                <h4>A. Encapsulation (Data Hiding)</h4>
+                <p>
+                    By setting data members to <code>private</code>, OOP forbids external files from modifying variables directly. Access is strictly controlled through public interface functions:
+                </p>
+                <pre><code>class BankAccount {
+private:
+    double balance; // Cannot be accessed or modified directly from outside
+
+public:
+    void deposit(double amount) {
+        if (amount &gt; 0) { balance += amount; } // Safety-guarded modification
+    }
+};</code></pre>
+
+                <h4>B. Abstraction (Complexity Hiding)</h4>
+                <p>
+                    Abstraction exposes only the essential details (the public API) to the caller, hiding the complex inner mechanics. For example, a user calls <code>myAccount.deposit(250.0);</code> without needing to understand how database sync, ledger tracking, or currency validation happens internally. This makes code changes easy to deploy without breaking external client applications.
+                </p>
+
+                <h4>C. Controlled Access (Getters &amp; Setters)</h4>
+                <p>
+                    Getters (accessor methods) and Setters (mutator methods) are public member functions used to read and write private member variables. Rather than exposing data members directly, using getters and setters enforces object boundaries and guarantees state consistency:
+                </p>
+                <ul>
+                    <li><strong>Data Validation &amp; Constraint Enforcement:</strong> Setters guard the state by ensuring only valid inputs are saved. For instance, a setter for <code>setAge(int age)</code> can verify that the age is between 0 and 120, preventing invalid states.</li>
+                    <li><strong>Read-Only or Write-Only Fields:</strong> Exposing variables directly allows both read and write access. With getters and setters, you can create read-only properties by providing only a getter (e.g., getting a unique bank account ID) or write-only properties by providing only a setter.</li>
+                    <li><strong>Encapsulation of Internal Representation:</strong> Getters and setters decouple the public interface from the internal storage. If you change a temperature class's internal unit from Celsius to Fahrenheit, you can adjust the getter to perform the conversion on-the-fly, meaning external calling code does not need to be modified.</li>
+                    <li><strong>Tracing &amp; Debugging:</strong> By placing a logging statement or debugger breakpoint inside a setter, you can instantly trace exactly which module is modifying a variable at runtime, which is impossible with public member variables.</li>
+                    <li><strong>Calculated Fields:</strong> Getters can return dynamically calculated values rather than static data (e.g., <code>getFullName()</code> concatenating <code>firstName</code> and <code>lastName</code>).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 11</span>
+        </div>
+    </div>
+
+    <!-- PAGE 12: CONSTRUCTORS & MEMORY MANAGEMENT -->
+    <div class="page">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.11 Constructors &amp; Memory Management in OOP (Case Study: MyString)</h3>
+            <p>
+                Object-Oriented Programming relies on constructors to initialize object states. Managing constructors and raw resources correctly is essential for preventing compiler errors and memory leaks.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Rule: Custom Constructors and the Default Constructor</div>
+                <p>
+                    In C++, if a class does not define any constructors, the compiler automatically generates a public, implicit <strong>default constructor</strong> (which takes no arguments).
+                </p>
+                <p>
+                    <strong>The Removal Rule:</strong> As soon as you define <em>any</em> custom constructor (a constructor that takes one or more arguments), the compiler **removes / does not generate** the default constructor.
+                </p>
+                <pre><code>class MyString {
+public:
+    // Custom constructor
+    MyString(const char* L) { ... }
+};
+
+int main() {
+    MyString Ahmed("AHMED TEST"); // Valid: matches custom constructor
+    MyString saif;               // COMPILE ERROR: Default constructor does not exist!
+}</code></pre>
+                <p>
+                    <strong>The Solution:</strong> If you need a default constructor in addition to custom constructors, you must define it explicitly (e.g., <code>MyString() { ... }</code> or <code>MyString() = default;</code>).
+                </p>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Analysis of MyString (Test2) Code Problems</div>
+                <p>
+                    Our case study class <code>MyString</code> (from Test2) demonstrates several critical memory management issues:
+                </p>
+                <ol>
+                    <li>
+                        <strong>Undefined Behavior (Printing nullptr):</strong>
+                        The default constructor sets <code>Letters = nullptr;</code>. Calling <code>std::cout &lt;&lt; Letters;</code> in <code>printt()</code> causes undefined behavior/crashes because <code>std::ostream</code> does not handle null char pointers.
+                    </li>
+                    <li>
+                        <strong>Memory Leaks:</strong>
+                        The custom constructor allocates memory on the heap via <code>new char[size + 1]</code>, but the class lacks a destructor (<code>~MyString()</code>) containing <code>delete[] Letters;</code> to free it.
+                    </li>
+                    <li>
+                        <strong>Rule of Three Violation:</strong>
+                        Copying objects performs a shallow copy of pointers, leading to shared ownership and potential double-free crashes.
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 12</span>
+        </div>
+    </div>
+
+    <!-- PAGE 13: INITIALIZATION VS ASSIGNMENT -->
+    <div class="page">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.12 Member Initialization Lists vs. Assignment (Case Study: Employee)</h3>
+            <p>
+                In C++, how class member variables are initialized in a constructor significantly impacts performance and correctness. There is a fundamental difference between initializing a member and assigning to it.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Inefficient &amp; Unsafe Approach: Assignment in Constructor Body</div>
+                <p>Consider the following implementation of the <code>Employee</code> constructor:</p>
+                <pre><code>class Employee {
+private:
+    MyString name; // Member object
+
+public:
+    Employee(int id) {
+        // Assignment inside constructor body
+        name = (id == 0) ? "Ahmed" : "Mohamed";
+    }
+};</code></pre>
+                
+                <h4>Why this calls multiple constructors/destructors:</h4>
+                <ol>
+                    <li>
+                        <strong>Default Initialization:</strong> Before the body of the <code>Employee</code> constructor runs, all members must be initialized. Since <code>name</code> is not in an initializer list, the compiler automatically calls <code>MyString</code>'s <strong>default constructor</strong> first.
+                    </li>
+                    <li>
+                        <strong>Temporary Object Creation:</strong> Inside the constructor body, the assignment statement runs. To assign the string literal <code>"Ahmed"</code> to a <code>MyString</code>, the compiler creates a <strong>temporary <code>MyString</code> object</strong> on the stack using the custom constructor <code>MyString(const char*)</code>.
+                    </li>
+                    <li>
+                        <strong>Copy Assignment:</strong> The compiler performs a memberwise copy assignment to copy the temporary into <code>name</code>.
+                    </li>
+                    <li>
+                        <strong>Temporary Destruction:</strong> At the end of the assignment statement, the temporary <code>MyString</code> object is destroyed, calling its destructor <code>~MyString()</code>.
+                    </li>
+                </ol>
+
+                <h4>The Critical Security Bug (Dangling Pointer):</h4>
+                <p>
+                    Because <code>MyString</code> manages raw memory and performs a shallow copy by default:
+                </p>
+                <ul>
+                    <li>The temporary object's <code>Letters</code> pointer is copied to <code>name.Letters</code> (shallow copy).</li>
+                    <li>When the temporary is destroyed at the end of the line, its destructor calls <code>delete[] Letters</code>.</li>
+                    <li>As a result, <code>name.Letters</code> is left pointing to <strong>freed/deleted memory</strong> (a dangling pointer), causing crashes or undefined behavior when printed.</li>
+                </ul>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">Efficient &amp; Safe Approach: Member Initialization List</div>
+                <p>Using a <strong>Member Initialization List</strong> bypasses these issues completely:</p>
+                <pre><code>class Employee {
+private:
+    MyString name;
+
+public:
+    // Member Initialization List
+    Employee(int id) : name((id == 0) ? "Ahmed" : "Mohamed") {
+        // Constructor body remains empty
+    }
+};</code></pre>
+
+                <h4>Why this works perfectly:</h4>
+                <ul>
+                    <li><strong>Direct Initialization:</strong> The member <code>name</code> is initialized directly using <code>MyString</code>'s custom constructor <code>MyString(const char*)</code> with the selected literal before the constructor body executes.</li>
+                    <li><strong>Single Constructor Call:</strong> 
+                        <ul>
+                            <li>The default constructor of <code>MyString</code> is **never called**.</li>
+                            <li>No temporary <code>MyString</code> object is created on the stack.</li>
+                            <li>No copy assignment operator is invoked.</li>
+                            <li>No temporary destructor is run.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Memory Safety:</strong> Because there is no temporary object created or destroyed, <code>name.Letters</code> holds the valid allocated heap memory buffer, preventing dangling pointer issues entirely.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 13</span>
+        </div>
+    </div>
+
+    <!-- PAGE 14: MEMBER INITIALIZATION ORDER -->
+    <div class="page">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.13 Order of Member Initialization in Initializer Lists</h3>
+            <p>
+                A common pitfall in C++ OOP is assuming that member variables are initialized in the order they are written in the constructor's member initialization list. In reality, C++ follows a strict, predefined rule.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">The Initialization Order Rule</div>
+                <p>
+                    In C++, class member variables are always initialized in the <strong>order of their declaration inside the class definition</strong>, completely ignoring the order in the constructor's initialization list.
+                </p>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Case Study: Uninitialized Garbage Bug</div>
+                <p>Consider the following class where one member is used to initialize another:</p>
+                <pre><code>class OrderDemo {
+private:
+    int first;  // Declared first
+    int second; // Declared second
+
+public:
+    // Bug: The developer listed 'second(val)' first, hoping it initializes first
+    OrderDemo(int val) : second(val), first(second + 5) {
+        // Constructor body
+    }
+
+    void print() {
+        std::cout &lt;&lt; "first: " &lt;&lt; first &lt;&lt; ", second: " &lt;&lt; second &lt;&lt; std::endl;
+    }
+};</code></pre>
+
+                <h4>What happens under the hood:</h4>
+                <ol>
+                    <li>
+                        Because <code>first</code> is declared before <code>second</code> in the class declaration, <strong><code>first</code> is initialized first</strong>.
+                    </li>
+                    <li>
+                        The compiler executes <code>first(second + 5)</code>. However, at this point, <code>second</code> has **not** been initialized yet and contains garbage memory value.
+                    </li>
+                    <li>
+                        <code>first</code> is initialized to garbage value + 5.
+                    </li>
+                    <li>
+                        Next, <code>second</code> is initialized to <code>val</code>.
+                    </li>
+                    <li>
+                        Result: <code>second</code> has the correct value, but <code>first</code> contains garbage!
+                    </li>
+                </ol>
+
+                <h4>Compiler Warnings (e.g., -Wreorder in GCC/Clang):</h4>
+                <pre style="background-color: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; font-family: monospace;"><code>warning: member 'second' will be initialized after [-Wreorder]
+warning:   member 'first' [-Wreorder]
+warning:   when initialized here [-Wreorder]</code></pre>
+            </div>
+
+            <div class="report-box" style="border-left-color: #0284c7; background-color: #f0f9ff;">
+                <div class="report-box-title" style="color: #0284c7;">Case Study 2: Member Initialization in MyString</div>
+                <p>
+                    Below is the implementation of <code>MyString</code>'s parameterized constructor from the screenshot using a member initialization list:
+                </p>
+                <pre><code>class MyString {
+private:
+    int size;       // Declared FIRST
+    char* literals; // Declared SECOND
+
+public:
+    MyString(const char* inputLiterals) :
+        size(strlen(inputLiterals)),   // Initialized first
+        literals(new char[size + 1])   // Initialized second (uses 'size')
+    {
+        memcpy(literals, inputLiterals, size);
+        literals[size] = '\0';
+        cout &lt;&lt; "Parameterized Constructor Called\n";
+    }
+};</code></pre>
+
+                <h4>Why this works safely:</h4>
+                <ul>
+                    <li><strong>Declaration Order matches usage:</strong> Because <code>size</code> is declared before <code>literals</code> in the private section of the class definition, the compiler guarantees that <code>size</code> is initialized first.</li>
+                    <li><strong>Valid reference:</strong> When <code>literals(new char[size + 1])</code> runs, <code>size</code> already holds the correct, initialized length of the string, ensuring a safe buffer allocation.</li>
+                </ul>
+
+                <h4>What happens if the declaration order is reversed?</h4>
+                <p>
+                    If the private member declaration order is swapped:
+                </p>
+                <pre style="background-color: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; font-family: monospace;"><code>private:
+    char* literals; // Declared FIRST now!
+    int size;       // Declared SECOND now!</code></pre>
+                <p>
+                    Even if the initializer list in the constructor remains exactly the same, the compiler will execute the initialization based on declaration order:
+                </p>
+                <ol>
+                    <li>The compiler initializes <code>literals</code> first because it is now declared first.</li>
+                    <li>It attempts to allocate <code>new char[size + 1]</code>. Since <code>size</code> is not yet initialized, it contains <strong>garbage memory</strong>.</li>
+                    <li>This allocates an arbitrary/incorrect amount of heap memory, leading to crashes or memory leaks.</li>
+                    <li>Next, <code>size</code> is initialized to the correct value, but the heap allocation is already corrupt.</li>
+                </ol>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">Why C++ Enforces This (Design Rationale)</div>
+                <p>
+                    <strong>Consistent Destruction Order:</strong> Destructors in C++ must destroy member variables in the exact **reverse order of their construction**.
+                </p>
+                <p>
+                    If construction order depended on the initializer list, different constructors of the same class could construct members in different orders. This would make it impossible for a single class destructor (which has only one body) to know which order to destroy them in at runtime. Enforcing the declaration order guarantees a single, fixed destruction order.
+                </p>
+                <p>
+                    <strong>Best Practice:</strong> Always write the member initialization list in the exact same order as the variables are declared in the class.
+                </p>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 14</span>
+        </div>
+    </div>
+
+    <!-- PAGE 15: IMPLICIT CASTING LIMITS -->
+    <div class="page">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.14 User-Defined Conversion Limits (One-Step vs. Two-Step Implicit Casting)</h3>
+            <p>
+                C++ provides implicit type casting to automatically convert arguments during function calls. However, to prevent complex and hard-to-debug code paths, the C++ compiler enforces strict limits on user-defined conversion chains.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">The One-Step Conversion Rule</div>
+                <p>
+                    <strong>C++ Language Standard Rule:</strong> The compiler is allowed to perform at most <strong>one user-defined implicit conversion</strong> (conversion via constructor or conversion operator) to match an argument's type with a parameter's type.
+                </p>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">Valid Example: One-Step Implicit Casting</div>
+                <p>Here are examples of valid one-step implicit conversions, both for primitive types and user-defined classes:</p>
+                <pre><code>class Dummy {
+public:
+    // Single-argument constructor allows implicit int -&gt; Dummy conversion
+    Dummy(int i) {}
+};
+
+void func(Dummy ob) {
+    // Expects a Dummy object
+}
+
+int main() {
+    // 1. Primitive Implicit Casting (Promotion)
+    uint8_t x = 10;
+    uint16_t y = x; 
+
+    // 2. Direct vs. Implicit Construction
+    Dummy obj1(10);       // Direct initialization
+    Dummy obj2 = 10;      // Implicit conversion: int -&gt; Dummy
+
+    // 3. One-Step Implicit Casting in Function Calls
+    func(10);             // Valid: int implicitly converts to Dummy via constructor
+}</code></pre>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Primitive Casting:</strong> Converting a <code>uint8_t</code> to <code>uint16_t</code> is a built-in promotion.</li>
+                    <li><strong>Class Implicit Casting:</strong> <code>Dummy obj2 = 10;</code> and <code>func(10);</code> are perfectly valid because they require exactly <strong>one</strong> user-defined conversion step (calling the <code>Dummy(int)</code> constructor) to convert the <code>int</code> literal to a <code>Dummy</code> object.</li>
+                </ul>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Case Study: The Two-Step Implicit Casting Problem</div>
+                <p>Consider the code block below illustrating a common compilation failure:</p>
+                <pre><code>class Dummy {
+public:
+    // Constructor expects a std::string
+    Dummy(const std::string str) {}
+};
+
+void print(Dummy ob) {
+    // Function expects a Dummy object
+}
+
+int main() {
+    // COMPILER ERROR: No viable conversion from 'const char[8]' to 'Dummy'
+    print("Testing"); 
+}</code></pre>
+
+                <h4>Why this fails to compile (Two-Step Implicit Casting):</h4>
+                <p>
+                    Passing the string literal <code>"Testing"</code> (which decays to a <code>const char*</code>) to a function expecting a <code>Dummy</code> object requires two user-defined conversions:
+                </p>
+                <ol>
+                    <li>
+                        <strong>Step 1:</strong> Convert <code>const char*</code> to <code>std::string</code> (using the <code>std::string</code> class constructor).
+                    </li>
+                    <li>
+                        <strong>Step 2:</strong> Convert <code>std::string</code> to <code>Dummy</code> (using the <code>Dummy</code> class constructor).
+                    </li>
+                </ol>
+                <p>
+                    Because this requires a <strong>two-step user-defined conversion chain</strong>, the compiler refuses to perform it implicitly, resulting in a compile-time error.
+                </p>
+                
+                <h4>Additional Cases of Two-Step Casting Failures:</h4>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Return Values:</strong> If a function signature is <code>Dummy getDummy()</code>, returning a string literal like <code>return "Testing";</code> will fail for the same two-step reason.</li>
+                    <li><strong>Assignment Operators:</strong> Writing <code>Dummy obj("Init"); obj = "Testing";</code> will fail unless the <code>Dummy</code> class explicitly defines an <code>operator=</code> that takes a <code>const char*</code>.</li>
+                </ul>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">How to Resolve the Type Mismatch (One-Step Solutions)</div>
+                <p>
+                    To fix this error, you must explicitly perform one of the conversion steps so that the compiler only has to execute a single implicit step:
+                </p>
+                
+                <h4>Solution A: Explicitly Convert to Dummy (Recommended)</h4>
+                <pre><code>func(Dummy("ahmed")); // Compiles perfectly!</code></pre>
+                <p style="font-size: 0.9rem; margin-top: -0.5rem; margin-bottom: 1rem;">
+                    Here, you explicitly call the <code>Dummy</code> constructor. Within that constructor call, the compiler only needs to perform a single implicit conversion from <code>const char*</code> to <code>std::string</code>, which is allowed.
+                </p>
+
+                <h4>Solution B: Explicitly Convert to std::string</h4>
+                <pre><code>func(std::string("ahmed")); // Compiles perfectly!</code></pre>
+                <p style="font-size: 0.9rem; margin-top: -0.5rem; margin-bottom: 1rem;">
+                    Here, you explicitly create a <code>std::string</code> object. The compiler now only needs to perform one implicit conversion: converting <code>std::string</code> to <code>Dummy</code>.
+                </p>
+
+                <h4>Solution C: Using C++14 String Literals</h4>
+                <pre><code>using namespace std::string_literals;
+func("ahmed"s); // Compiles perfectly!</code></pre>
+                <p style="font-size: 0.9rem; margin-top: -0.5rem; margin-bottom: 0;">
+                    Adding the <code>s</code> suffix to <code>"ahmed"</code> converts it directly to a <code>std::string</code> literal. The compiler only performs a single implicit conversion step from <code>std::string</code> to <code>Dummy</code>.
+                </p>
+            </div>
+
+            <div class="report-box" style="border-left-color: #f59e0b; background-color: #fffbeb;">
+                <div class="report-box-title" style="color: #d97706;">Preventing Implicit Casting: The explicit Keyword</div>
+                <p>
+                    Sometimes, allowing the compiler to perform implicit conversions (even just one step) can lead to subtle bugs or unintended behavior. To strictly enforce type safety and forbid implicit casting through a constructor, C++ provides the <code>explicit</code> keyword.
+                </p>
+                
+                <pre><code>class SecureDummy {
+public:
+    // The explicit keyword prevents implicit conversions
+    explicit SecureDummy(int i) {}
+};
+
+void func(SecureDummy ob) {
+    // Expects a SecureDummy object
+}
+
+int main() {
+    SecureDummy obj1(10);     // ALLOWED: Direct initialization
+
+    // COMPILER ERROR: Implicit conversion from int to SecureDummy is forbidden
+    SecureDummy obj2 = 10;    
+
+    // COMPILER ERROR: Implicit conversion in function argument is forbidden
+    func(10);                 
+
+    // ALLOWED: Explicit casting still works
+    func(SecureDummy(10));    
+    func(static_cast&lt;SecureDummy&gt;(10));
+}</code></pre>
+
+                <h4>When to use <code>explicit</code>:</h4>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Single-argument constructors:</strong> By default, any constructor that can be called with a single argument acts as an implicit conversion operator. It is widely considered a best practice in modern C++ to mark these constructors as <code>explicit</code> unless you specifically want the implicit conversion behavior.</li>
+                    <li><strong>Preventing Accidental Type Coercion:</strong> If your class represents something where an integer isn't logically equivalent (e.g., a <code>String</code> class taking a capacity size in its constructor), making it <code>explicit</code> prevents someone from accidentally writing <code>String s = 5;</code> or <code>printString(5);</code>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 15</span>
+        </div>
+    </div>
+
+    <!-- PAGE 16: DELEGATING CONSTRUCTORS -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.15 Delegating Constructors in Modern C++</h3>
+            <p>
+                <strong>Delegating constructors</strong>, introduced in C++11, allow a constructor to call another constructor of the same class from its member initialization list. This feature promotes code reuse and helps follow the DRY (Don't Repeat Yourself) principle.
+            </p>
+
+            <div class="report-box" style="border-left-color: #3b82f6; background-color: #eff6ff;">
+                <div class="report-box-title" style="color: #2563eb;">The Problem It Solves</div>
+                <p>
+                    Before C++11, if multiple constructors had overlapping initialization logic, developers either had to duplicate code across constructors or create a private <code>init()</code> method that all constructors called. 
+                </p>
+                <p>
+                    Crucially, attempting to call a constructor from within the <strong>body</strong> of another constructor does <em>not</em> initialize the current object. Instead, it creates a temporary, unnamed object that is immediately destroyed. Delegating constructors solve this by safely routing the initialization through the initializer list.
+                </p>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Code Example: Delegating Constructors</div>
+                <pre><code>class Dummy {
+private:
+    int x;
+public:
+    // Default constructor
+    Dummy() : x(10) {
+        std::cout &lt;&lt; "def ctor\n";
+    }
+
+    // Delegating Constructor
+    Dummy(int age) : Dummy() { // Delegates initialization to Dummy()
+        // Without C++11 delegation, if you wrote Dummy() inside the body here:
+        // 1. It would create a temp location [calling def ctor]
+        // 2. It would immediately destruct that temp location
+        // The actual object's 'x' would remain uninitialized.
+        
+        std::cout &lt;&lt; "non def ctor called\n";
+    }
+};
+
+void func(Dummy ob) {
+}
+
+int main() {
+    Dummy ob(1);
+    // Output:
+    // def ctor
+    // non def ctor called
+}</code></pre>
+                <h4>Why we use it:</h4>
+                <ul>
+                    <li><strong>Avoids Code Duplication:</strong> Shared setup logic (like initializing common defaults such as <code>x(10)</code>) can be written once in a primary constructor.</li>
+                    <li><strong>Safe Initialization:</strong> It correctly initializes the current object instance instead of spinning up and tearing down temporary objects.</li>
+                    <li><strong>Cleaner Code:</strong> Eliminates the need for boilerplate <code>init()</code> helper functions.</li>
+                </ul>
+
+                <div class="report-box danger" style="margin-top: 1rem; margin-bottom: 0;">
+                    <div class="report-box-title">Important Restriction</div>
+                    <p style="margin-bottom: 0;">
+                        If a constructor delegates to another constructor, <strong>it cannot also initialize other members in the same initialization list</strong>. The delegation (e.g., <code>: Dummy()</code>) must be the <em>only</em> item in the list. For example, writing <code>Dummy(int age) : Dummy(), myAge(age) {}</code> will result in a compiler error. Any additional initialization must happen inside the constructor's body.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 16</span>
+        </div>
+    </div>
+
+    <!-- PAGE 17: SHALLOW VS DEEP COPY -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.16 The Danger of Default Copy Constructors with Pointers (Shallow vs. Deep Copy)</h3>
+            <p>
+                When you do not explicitly define a copy constructor, the C++ compiler automatically generates a <strong>premade default copy constructor</strong>. This default copy constructor performs a <strong>shallow copy</strong>, meaning it copies the exact value of each member variable directly from one object to another.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">The Shallow Copy Problem (Segmentation Faults)</div>
+                <p>
+                    If your class contains pointers (like the <code>char* Letters</code> in our <code>MyString</code> class), a shallow copy simply copies the memory address stored in the pointer. <strong>Both objects will now point to the exact same block of heap memory.</strong>
+                </p>
+                <p>
+                    This leads to a catastrophic chain of events when the objects go out of scope and are destroyed:
+                </p>
+                <ol>
+                    <li>Object A is destroyed. Its destructor calls <code>delete[] Letters;</code>, successfully freeing the memory block.</li>
+                    <li>Object B is destroyed. Its destructor calls <code>delete[] Letters;</code> on the <strong>exact same memory address</strong>.</li>
+                    <li>Attempting to free memory that has already been freed causes a <strong>Double Free Error</strong>, resulting in an immediate <strong>Segmentation Fault (Crash)</strong>.</li>
+                </ol>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Visualizing the Problem</div>
+                <pre><code>int main() {
+    MyString str1("HELLO");
+    
+    // Using the compiler's default copy constructor (Shallow Copy)
+    MyString str2 = str1; 
+
+    // Both str1.Letters and str2.Letters now hold the same memory address (e.g., 0x4A3B21)
+    
+} // &lt;-- ERROR HAPPENS HERE! 
+  // str2 destructor frees 0x4A3B21.
+  // str1 destructor tries to free 0x4A3B21 again! --&gt; CRASH!</code></pre>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">The Solution: Deep Copying (The Rule of Three)</div>
+                <p>
+                    To prevent this, you must write a <strong>Custom Copy Constructor</strong> that performs a <strong>Deep Copy</strong>. Instead of copying the pointer address, a deep copy allocates a brand new block of heap memory and copies the actual data over.
+                </p>
+                <pre><code>class MyString {
+public:
+    // Custom Copy Constructor (Deep Copy)
+    MyString(const MyString&amp; source) : size(source.size) {
+        // 1. Allocate NEW distinct memory on the heap
+        Letters = new char[size + 1];
+        
+        // 2. Copy the actual data from the source, not the pointer address
+        std::memcpy(Letters, source.Letters, size + 1);
+    }
+};</code></pre>
+                <p style="font-size: 0.9rem; margin-top: 1rem; margin-bottom: 0;">
+                    <em>Note: If you have to manage memory manually by writing a custom copy constructor, you usually also need to write a custom Destructor and a custom Copy Assignment Operator. This is known in C++ as <strong>The Rule of Three</strong>.</em>
+                </p>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Summary: Shallow Copy vs. Deep Copy</div>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Shallow Copy (Default)</th>
+                            <th>Deep Copy (Custom)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Mechanism</strong></td>
+                            <td>Copies the exact memory address (pointer) directly.</td>
+                            <td>Allocates new heap memory and copies the actual data.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Memory Sharing</strong></td>
+                            <td>Both objects point to the exact same memory location.</td>
+                            <td>Each object points to its own unique memory location.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Destruction Safety</strong></td>
+                            <td><span style="color: #dc2626; font-weight: bold;">Unsafe:</span> Leads to Double Free / Segmentation Faults.</td>
+                            <td><span style="color: #16a34a; font-weight: bold;">Safe:</span> Each object cleanly deletes its own memory.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Data Modification</strong></td>
+                            <td>Changing data through Object A affects Object B.</td>
+                            <td>Changing data through Object A does not affect Object B.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 17</span>
+        </div>
+    </div>
+
+    <!-- PAGE 18: LVALUES, RVALUES & CONST REFERENCES -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.17 Lvalues, Rvalues, and the Advantage of Const References</h3>
+            <p>
+                Taking arguments by reference (<code>&amp;</code>) is an excellent practice because it avoids copying large objects, saving both CPU time and memory. However, whether you use <code>const</code> or not fundamentally changes how the function interacts with <strong>Lvalues</strong> and <strong>Rvalues</strong>.
+            </p>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Defining Lvalues and Rvalues</div>
+                <ul>
+                    <li><strong>Lvalue (Locator Value):</strong> Something that has a permanent memory address and a name (e.g., an instantiated object like <code>MyString A;</code>).</li>
+                    <li><strong>Rvalue (Read Value):</strong> A temporary value that doesn't have a name and is about to be destroyed (e.g., the literal number <code>5</code>, or an anonymous temporary object like <code>MyString("Temp")</code>).</li>
+                </ul>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">1. Using Non-Const Reference: <code>void func(MyString&amp; x)</code></div>
+                <p>
+                    A standard non-const reference (<code>&amp;</code>) tells the compiler: <em>"I want to modify the original object you pass me."</em>
+                </p>
+                <ul>
+                    <li><strong>Lvalues: <span style="color: #16a34a; font-weight: bold;">ACCEPTED</span>.</strong> You can pass a named variable <code>A</code> into it, and the function can change <code>A</code>.</li>
+                    <li><strong>Rvalues: <span style="color: #dc2626; font-weight: bold;">REJECTED</span>.</strong> C++ forbids this. If a function intends to modify an object, it makes no logical sense to pass it a temporary object that will be deleted on the next line. The modifications would be instantly lost!</li>
+                </ul>
+                <pre><code>void modifyString(MyString&amp; str) { /* ... */ }
+
+MyString A("Test");
+modifyString(A);                    // Works! (A is an Lvalue)
+modifyString(MyString("Temp"));     // ERROR! (Cannot bind an Rvalue to a non-const reference)</code></pre>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">2. Using Const Reference: <code>void func(const MyString&amp; x)</code></div>
+                <p>
+                    A const reference (<code>const &amp;</code>) tells the compiler: <em>"I just want to look at this object without copying it, and I promise not to change it."</em>
+                </p>
+                <ul>
+                    <li><strong>Lvalues: <span style="color: #16a34a; font-weight: bold;">ACCEPTED</span>.</strong></li>
+                    <li><strong>Rvalues: <span style="color: #16a34a; font-weight: bold;">ACCEPTED</span>!</strong> This is the magic of C++. C++ allows a temporary Rvalue to bind to a <code>const &amp;</code>. The compiler essentially extends the lifespan of the temporary object just long enough for the function to use it.</li>
+                </ul>
+                <pre><code>void printString(const MyString&amp; str) { /* ... */ }
+
+MyString A("Test");
+printString(A);                    // Works! (A is an Lvalue)
+printString(MyString("Temp"));     // Works! (Rvalue binds perfectly to const&amp;)</code></pre>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Summary of the Advantage</div>
+                <p>By making your parameter <code>const obj&amp; x</code>, you get the best of both worlds:</p>
+                <ul style="margin-bottom: 0;">
+                    <li><strong>Performance:</strong> You don't trigger expensive copies of large objects.</li>
+                    <li><strong>Safety:</strong> The function cannot accidentally modify your object.</li>
+                    <li><strong>Flexibility (Lvalues + Rvalues):</strong> You can seamlessly pass both existing named variables and temporary inline values (like <code>func(5)</code> or <code>func(Object())</code>) into the same function.</li>
+                </ul>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Function Overloading Ambiguity: Pass-by-Value vs. Pass-by-Reference</div>
+                <p>
+                    Understanding how Lvalues and Rvalues behave is critical when dealing with overloaded functions. A very common compile-time error occurs when you provide overloads for both Pass-by-Value and Pass-by-Reference.
+                </p>
+                <pre><code>void func(int x)  { /* Pass by value */ }
+void func(int&amp; y) { /* Pass by reference */ }</code></pre>
+                <h5 style="margin-top: 1rem;">Case 1: Passing an Rvalue (Works ✅)</h5>
+                <pre><code>func(1); // Compiles successfully!</code></pre>
+                <p style="margin-bottom: 1rem;">
+                    When you pass the Rvalue literal <code>1</code>, the compiler evaluates both options. It can easily copy <code>1</code> into <code>int x</code>. However, as established above, a non-const reference (<code>int&amp; y</code>) <strong>cannot</strong> bind to an Rvalue. Therefore, the reference overload is completely disqualified. This leaves exactly one valid match (Pass by value), so the code compiles perfectly!
+                </p>
+
+                <h5>Case 2: Passing an Lvalue (Fails ❌)</h5>
+                <pre><code>int x = 10;
+func(x); // COMPILE TIME ERROR! (Ambiguous call)</code></pre>
+                <p style="margin-bottom: 0;">
+                    When you pass the Lvalue <code>x</code>, the compiler sees that it can perfectly copy the value into <code>int x</code> (Exact Match). It <em>also</em> sees that it can perfectly bind a reference to the Lvalue via <code>int&amp; y</code> (Another Exact Match). Because both overloads are equally valid 100% exact matches for an Lvalue, the compiler refuses to guess which one you intend to run, resulting in a strict <strong>Ambiguity Error</strong>.
+                </p>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 18</span>
+        </div>
+    </div>
+
+    <!-- PAGE 19: RVO AND MOVE SEMANTICS -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.18 Returning Objects by Value: RVO and Move Semantics</h3>
+            <p>
+                Consider the following scenario where a function creates an object locally and returns it by value:
+            </p>
+            <pre><code>MyString CreateString() {
+    MyString innerstring("!11");
+    return innerstring;
+}
+
+int main() {
+    MyString number = CreateString();
+}</code></pre>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Scenario 1: Without RVO and Without Move Semantics (Pre-C++11)</div>
+                <p>
+                    If the compiler does no optimization, returning an object by value is extremely inefficient because it relies heavily on <strong>Deep Copies</strong>. The process looks like this:
+                </p>
+                <ol>
+                    <li><code>innerstring</code> is constructed inside <code>CreateString()</code>.</li>
+                    <li>As the function returns, a <strong>temporary hidden object</strong> is created in memory via the <strong>Copy Constructor</strong> (Deep Copy #1).</li>
+                    <li><code>innerstring</code> goes out of scope and its destructor is called.</li>
+                    <li>In <code>main</code>, the <code>number</code> object is created by copying the temporary hidden object via the <strong>Copy Constructor</strong> (Deep Copy #2).</li>
+                    <li>The temporary hidden object is destroyed.</li>
+                </ol>
+                <p style="color: #dc2626; font-weight: bold; margin-bottom: 0;">
+                    Result: 1 Normal Constructor, 2 Copy Constructors (Expensive Deep Copies), and 3 Destructors.
+                </p>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">Scenario 2: With RVO (Return Value Optimization)</div>
+                <p>
+                    Modern C++ compilers are incredibly smart. By default, they use a technique called <strong>RVO (Return Value Optimization)</strong>—specifically Named RVO (NRVO) in this case—to eliminate unnecessary copying entirely.
+                </p>
+                <ul>
+                    <li>The compiler realizes that <code>innerstring</code> is just going to end up inside <code>number</code> anyway.</li>
+                    <li>Instead of creating <code>innerstring</code> locally and copying it later, the compiler constructs <code>innerstring</code> <strong>directly inside the memory space allocated for <code>number</code> in <code>main()</code></strong>.</li>
+                </ul>
+                <p style="color: #16a34a; font-weight: bold; margin-bottom: 0;">
+                    Result: 1 Normal Constructor, 0 Copies, 0 Destructors overhead. It is perfectly optimized!
+                </p>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Scenario 3: Optimizing Manually (Move Semantics in C++11)</div>
+                <p>
+                    Sometimes the compiler <em>cannot</em> perform RVO (for example, if there are multiple return paths returning different local variables). How do we prevent the catastrophic double deep-copy without relying on the compiler's RVO magic? 
+                </p>
+                <p>
+                    We use <strong>Move Semantics</strong>. We define a <strong>Move Constructor</strong> <code>MyString(MyString&amp;&amp;)</code> designed to "steal" resources from a temporary Rvalue instead of performing a deep copy.
+                </p>
+                <pre><code>class MyString {
+public:
+    // Move Constructor (Uses &amp;&amp; to bind to temporary Rvalues)
+    MyString(MyString&amp;&amp; source) noexcept : size(source.size), Letters(source.Letters) {
+        // We STEAL the pointer from the source.
+        // Now we must sever the source's connection so its destructor doesn't free our memory!
+        source.Letters = nullptr;
+        source.size = 0;
+    }
+};</code></pre>
+                <ol>
+                    <li><code>innerstring</code> is constructed.</li>
+                    <li>The function returns. The compiler sees <code>innerstring</code> is about to die, so it treats it as an Rvalue. It calls the <strong>Move Constructor</strong> instead of the Copy Constructor to build the temporary object.</li>
+                    <li>The Move Constructor simply copies the pointer address (instantaneous) and sets the old pointer to <code>nullptr</code>.</li>
+                    <li><code>innerstring</code> dies safely because deleting a <code>nullptr</code> does nothing.</li>
+                </ol>
+                <p style="margin-bottom: 0;"><strong>Result:</strong> 1 Constructor, 1 Move (which is as fast as copying an integer pointer), no deep copying required!</p>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 19</span>
+        </div>
+    </div>
+
+    <!-- PAGE 20: THE THIS POINTER -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.19 The <code>this</code> Pointer: Under the Hood of Member Functions</h3>
+            <p>
+                In object-oriented C++, member functions (like <code>void printt()</code>) seem to automatically know which object's data they are supposed to access. But how does the compiler actually map a member function to a specific object instance? The answer lies in the <strong><code>this</code> pointer</strong>.
+            </p>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">What is the <code>this</code> Pointer?</div>
+                <p>
+                    The <code>this</code> pointer is a <strong>hidden, implicit parameter</strong> that the compiler automatically passes to every non-static member function. It holds the memory address of the object that invoked the function.
+                </p>
+                <p>
+                    When you write code like <code>Ahmed.printt();</code>, the compiler secretly rewrites it under the hood to look something like this:
+                </p>
+                <pre><code>// 1. What you write:
+Ahmed.printt();
+
+// 2. What the compiler translates it to (Conceptually):
+MyString::printt(&amp;Ahmed); // Passes the address of 'Ahmed' as a hidden argument</code></pre>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Memory Layout: Where does the <code>this</code> Pointer Point?</div>
+                <p>
+                    To truly understand the <code>this</code> pointer, it is crucial to understand how C++ classes are mapped in physical memory:
+                </p>
+                <ul>
+                    <li><strong>The Code (Member Functions):</strong> Stored only <em>once</em> in the <strong>Text Segment</strong> (or Code Segment) of memory. All object instances share this exact same block of instructions.</li>
+                    <li><strong>The Data (Member Variables):</strong> Stored uniquely for each individual object instance (e.g., in the <strong>Heap</strong> or <strong>Stack</strong>, depending on how the object was created).</li>
+                </ul>
+                <p style="margin-bottom: 0;">
+                    Because all objects share the identical function code in the Text Segment, the executing function needs a way to know <em>which</em> object's data it should be modifying at that exact moment. The <code>this</code> pointer perfectly solves this by <strong>pointing directly to the start of the specific object's unique data block</strong> in memory!
+                </p>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">How the Compiler Translates the Class Function</div>
+                <p>
+                    Similarly, inside the member function itself, the compiler modifies how variables are accessed. When you reference a member variable like <code>size</code> or <code>Letters</code>, the compiler automatically prepends <code>this-&gt;</code> to it.
+                </p>
+                <pre><code>// 1. What you write:
+void MyString::printt() {
+    if (Letters != nullptr) {
+        std::cout &lt;&lt; Letters &lt;&lt; std::endl;
+    }
+}
+
+// 2. What the compiler translates it to (Conceptually):
+void MyString::printt(MyString* const this) { // Hidden parameter added
+    if (this-&gt;Letters != nullptr) {           // 'this-&gt;' added to member access
+        std::cout &lt;&lt; this-&gt;Letters &lt;&lt; std::endl;
+    }
+}</code></pre>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Applying this to Operator Overloading</div>
+                <p>
+                    This hidden translation is exactly how <strong>member operator overloading</strong> works! When you use an operator on an object, the compiler translates it into a standard function call where the left-hand operand is secretly passed as the <code>this</code> pointer (or as a reference parameter).
+                </p>
+                <p>
+                    For example, consider printing an integer: <code>std::cout &lt;&lt; 5;</code>
+                </p>
+                <ol>
+                    <li>The compiler first translates the syntax into a member function call: <code>std::cout.operator&lt;&lt;(5);</code></li>
+                    <li>Then, just like <code>printt()</code> above, it translates it into a standard C-style function call, passing the address of the calling object (<code>&amp;std::cout</code>) as the first hidden parameter!</li>
+                </ol>
+                <pre><code>// 1. You write:
+std::cout &lt;&lt; 5;
+
+// 2. The compiler sees it as a member function call:
+std::cout.operator&lt;&lt;(5);
+
+// 3. The compiler translates it to a true C-style function call:
+// It passes a pointer to the 'cout' object as the first hidden parameter!
+operator&lt;&lt;( &amp;std::cout, 5 ); // Conceptually: operator&lt;&lt;(std::ostream* const this, int val)</code></pre>
+                <p style="margin-top: 1rem; margin-bottom: 0;">
+                    <em>This is precisely why member operators always take one less argument than you'd expect. A binary operator like <code>+</code> only takes 1 explicit parameter because the left side is already passed in via the hidden <code>this</code> pointer!</em>
+                </p>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">Explicit Uses of the <code>this</code> Pointer</div>
+                <p>
+                    While the compiler handles <code>this</code> implicitly most of the time, there are two major scenarios where you <strong>must</strong> use the <code>this</code> pointer explicitly in your code:
+                </p>
+                <ol>
+                    <li>
+                        <strong>Resolving Naming Conflicts (Shadowing):</strong>
+                        <br>
+                        If a function parameter has the exact same name as a member variable, the parameter "shadows" the member variable. You must use <code>this-&gt;</code> to tell the compiler you mean the class member, not the parameter.
+                        <pre><code>void MyString::setSize(int size) {
+    // size = size;       &lt;-- WRONG! Assigns the parameter to itself.
+    this-&gt;size = size;    &lt;-- CORRECT! Assigns parameter to the object's member.
+}</code></pre>
+                    </li>
+                    <li style="margin-top: 1rem;">
+                        <strong>Returning the Object for Method Chaining:</strong>
+                        <br>
+                        If you want to allow calling multiple functions in a single continuous line, the function must return the object itself. You do this by returning <code>this</code> (for pointers) or <code>*this</code> (for values/references). 
+                        
+                        <div class="report-box" style="margin-top: 1rem; background-color: #fff;">
+                            <div class="report-box-title">The Critical Difference: <code>Dummy</code> vs <code>Dummy&amp;</code> vs <code>Dummy*</code></div>
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Return Type</th>
+                                        <th>Return Code</th>
+                                        <th>Chaining Syntax</th>
+                                        <th>What Actually Happens?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Pointer</strong> (<code>Dummy*</code>)</td>
+                                        <td><code>return this;</code></td>
+                                        <td><code>ob.add()-&gt;sub();</code></td>
+                                        <td>Returns the memory address. Modifies the <strong>original</strong> object.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Reference</strong> (<code>Dummy&amp;</code>)</td>
+                                        <td><code>return *this;</code></td>
+                                        <td><code>ob.add().sub();</code></td>
+                                        <td>Returns an alias to the <strong>original</strong> object. Modifies the original object. (Standard C++ Practice)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Value</strong> (<code>Dummy</code>)</td>
+                                        <td><code>return *this;</code></td>
+                                        <td><code>ob.add().sub();</code></td>
+                                        <td><span style="color: #dc2626; font-weight: bold;">WARNING:</span> Returns a brand <strong>NEW COPY</strong> of the object. Any chained methods (like <code>.sub()</code>) will modify the copy, leaving the original object unchanged!</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <pre style="margin-top: 1rem;"><code>class Dummy {
+private:
+    int acc = 0;
+public:
+    // 1. Returns a pointer (Modifies original)
+    Dummy* performAdd() {
+        acc += 10;
+        return this; 
+    }
+
+    // 2. Returns a reference (Modifies original)
+    Dummy&amp; performSubtract() {
+        acc -= 5;
+        return *this; // Dereferences the pointer to return the actual object reference
+    }
+
+    // 3. Returns a copy (Modifies a copy, NOT the original!)
+    Dummy performMultiply() {
+        acc *= 2;
+        return *this; // Creates and returns a totally new Dummy object
+    }
+};
+
+int main() {
+    Dummy ob;
+    
+    // Pointer chaining (modifies the original 'ob')
+    ob.performAdd()-&gt;performSubtract(); 
+    
+    // Value chaining (performMultiply runs on a COPY of 'ob'!)
+    ob.performSubtract().performMultiply(); 
+}</code></pre>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 20</span>
+        </div>
+    </div>
+
+    <!-- PAGE 21: STATIC MEMBERS -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.20 Static Members and the Scope Resolution Operator</h3>
+            <p>
+                In C++, the <code>static</code> keyword within a class fundamentally changes the lifetime and scope of variables and functions. Instead of belonging to individual object instances, <strong>static members belong to the class blueprint itself</strong>.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Memory Placement of Static Variables</div>
+                <p>
+                    Unlike normal member variables that are instantiated uniquely for every object (on the stack or heap), static variables are allocated exactly <strong>once</strong> in the program's memory:
+                </p>
+                <ul>
+                    <li><strong>Uninitialized Static Variables:</strong> Stored in the <strong>BSS Segment</strong>.</li>
+                    <li><strong>Initialized Static Variables:</strong> Stored in the <strong>Data Segment</strong>.</li>
+                </ul>
+                <p style="margin-bottom: 0;">
+                    Because they reside in the Data/BSS segments, static variables are created when the program starts and destroyed when the program ends. They act identically to global variables, except their visibility is strictly confined to the class scope.
+                </p>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Syntax: Declaration vs. Definition</div>
+                <p>
+                    A common compilation pitfall is forgetting that a static variable must be <em>declared</em> inside the class, but <strong>defined and initialized outside the class</strong>.
+                </p>
+                <pre><code>class Employee {
+private:
+    // 1. DECLARATION: Telling the compiler the variable exists
+    static int employeeCount;
+
+public:
+    Employee() { 
+        employeeCount++; // All objects share and modify this exact same variable
+    }
+
+    // Static Function
+    static int getCount() {
+        // Note: Static functions DO NOT have a 'this' pointer!
+        // Therefore, they can ONLY access static variables, not normal instance variables.
+        return employeeCount;
+    }
+};
+
+// 2. DEFINITION &amp; INITIALIZATION: Allocating the actual memory (Global Scope)
+// This must be written outside the class, exactly once, usually in a .cpp file.
+int Employee::employeeCount = 0;</code></pre>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">Using Static Members &amp; the Scope Resolution Operator (::)</div>
+                <p>
+                    Because static members belong to the class rather than a specific object instance, you do not need to create an object to use them. You access them using the <strong>Scope Resolution Operator <code>::</code></strong>.
+                </p>
+                <pre><code>int main() {
+    // Accessing a static function WITHOUT creating an object!
+    std::cout &lt;&lt; "Initial Count: " &lt;&lt; Employee::getCount() &lt;&lt; "\n";
+
+    // Creating objects
+    Employee e1;
+    Employee e2;
+
+    // The count increments globally for the class
+    std::cout &lt;&lt; "Final Count: " &lt;&lt; Employee::getCount() &lt;&lt; "\n"; 
+}</code></pre>
+                <p style="margin-top: 1rem; margin-bottom: 0;">
+                    <strong>The <code>::</code> Operator:</strong><br>
+                    The double colon <code>::</code> explicitly tells the compiler: <em>"Look inside the <code>Employee</code> class scope for the identifier <code>getCount</code>"</em>. This is structurally different from the dot operator (<code>.</code>), which means <em>"Look inside this specific memory instance for a member."</em>
+                </p>
+            </div>
+
+            <div class="report-box">
+                <div class="report-box-title">Case Study: The Singleton Pattern (Static Variables in Functions)</div>
+                <p>
+                    A very common and powerful use of static members is the <strong>Singleton Pattern</strong>. This is used when you want to absolutely guarantee that <em>only one single instance</em> of a class can ever be created throughout the entire lifetime of the program.
+                </p>
+                <p>
+                    Here is how it is achieved using a private constructor, a static local variable, and a static member function:
+                </p>
+                <pre><code>class Dummy {
+private:
+    // Special Member function (Private!)
+    // This prevents anyone from creating an object normally (e.g., Dummy ob;)
+    Dummy() { 
+    }
+
+public:
+    // Goal: Create object -&gt; CTOR
+    // Return By Reference
+    static Dummy&amp; createObject() {
+        // Static local variable!
+        // This object is created ONLY ONCE during the very first call.
+        // On all subsequent calls, the existing object is returned.
+        static Dummy object;  
+        
+        return object;
+    }
+};
+
+void func() {
+    // A static local variable retains its value between function calls.
+    static int var;
+    var++;
+}
+
+int main() {
+    // Dummy ob;  &gt;&gt; Compile Time Error (Constructor is private)
+
+    // Goal: Create only one object
+    // We use the scope resolution operator to call the static function.
+    Dummy ob1 = Dummy::createObject(); 
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 21</span>
+        </div>
+    </div>
+
+    <!-- PAGE 22: FRIEND CLASSES AND FUNCTIONS -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.21 The <code>friend</code> Keyword: Friend Functions and Classes</h3>
+            <p>
+                One of the fundamental pillars of Object-Oriented Programming is <strong>Data Hiding (Encapsulation)</strong>. By default, <code>private</code> and <code>protected</code> members of a class are strictly inaccessible from outside the class scope. 
+            </p>
+            <p>
+                However, there are scenarios where two distinct classes are tightly coupled, or a specific external function needs direct access to a class's internal state. C++ provides the <strong><code>friend</code></strong> keyword as a controlled "loophole" to encapsulation.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">What does the <code>friend</code> keyword do?</div>
+                <ul>
+                    <li>A class can grant <strong>friendship</strong> to a specific external function or an entire external class.</li>
+                    <li>Once granted, the friend can freely access <strong>all private and protected members</strong> of that class as if it were a member itself.</li>
+                    <li><strong>Friendship is NOT mutual:</strong> If Class A is a friend of Class B, Class B is <em>not</em> automatically a friend of Class A.</li>
+                    <li><strong>Friendship is NOT inherited:</strong> Friends of a base class are not automatically friends of derived classes.</li>
+                    <li><strong>Placement does not matter:</strong> A <code>friend</code> declaration can be placed anywhere inside the class (under <code>public:</code>, <code>private:</code>, or <code>protected:</code>). It makes absolutely no difference because friend functions are not member functions of the class, so access modifiers do not apply to them.</li>
+                </ul>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Code Example: Friend Function</div>
+                <p>
+                    In the example below, we have two entities: A <code>DatabaseAccess</code> class that fetches and stores data, and an external <code>display()</code> function that needs to print it.
+                </p>
+                <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+// 1. The Class that holds the data
+class DatabaseAccess {
+    // Granting friendship to a specific external function
+    // This function is NOT a member of DatabaseAccess
+    friend void display(const DatabaseAccess&amp; object);
+
+private:
+    int data1 = 10;
+    int data2 = 20;
+    int data3 = 30;
+    // ... A lot of data variables
+};
+
+// 2. The external function that displays the data
+// Because it was declared a "friend", it can access private members directly!
+// Any other function/class/scope cannot access the private data.
+void display(const DatabaseAccess&amp; object) {
+    std::cout &lt;&lt; object.data1 &lt;&lt; "\n";
+    std::cout &lt;&lt; object.data2 &lt;&lt; "\n";
+    std::cout &lt;&lt; object.data3 &lt;&lt; "\n"; 
+}
+
+int main() {
+    DatabaseAccess db;
+    display(db); // Will successfully print 10, 20, 30
+}</code></pre>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">Friend Classes</div>
+                <p>
+                    Instead of making just one function a friend, you can grant access to an <strong>entire class</strong>. This means <em>every</em> member function of the friend class has access to your private data.
+                </p>
+                <pre><code>class DatabaseAccess {
+    // Granting friendship to the ENTIRE DisplayManager class
+    friend class DisplayManager;
+
+private:
+    int data1 = 10;
+};
+
+class DisplayManager {
+public:
+    void printData(const DatabaseAccess&amp; db) {
+        std::cout &lt;&lt; db.data1; // Allowed!
+    }
+    
+    void modifyData(DatabaseAccess&amp; db) {
+        db.data1 = 99;         // Allowed!
+    }
+};</code></pre>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 22</span>
+        </div>
+    </div>
+
+    <!-- PAGE 23: FORWARD DECLARATIONS -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.22 Circular Referencing and Forward Declarations</h3>
+            <p>
+                When building complex systems in C++, you often encounter situations where two or more classes need to know about each other. For example, a <code>Database</code> class might need to notify a <code>Viewer</code> class, and the <code>Viewer</code> class needs to read from the <code>Database</code>. This creates a problem known as <strong>Circular Referencing</strong>.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">The Problem: Circular Referencing (Infinite Includes)</div>
+                <p>
+                    If <code>Viewer.h</code> includes <code>Database.h</code>, and <code>Database.h</code> includes <code>Viewer.h</code>, the C++ preprocessor gets stuck in an infinite inclusion loop. Even with header guards (<code>#ifndef</code>), the compiler will ultimately fail because it cannot fully construct one class without the other being fully defined first.
+                </p>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">The Solution: Forward Declarations</div>
+                <p>
+                    The ideal way to break this circular dependency is to use a <strong>Forward Declaration</strong>. 
+                </p>
+                <ul>
+                    <li>A Forward Declaration simply tells the compiler: <em>"I promise a class with this name exists. You don't need to know its size or details right now, just trust me."</em></li>
+                    <li>Because the compiler doesn't know the exact size of the class, you can <strong>only use pointers or references</strong> (e.g., <code>Database&amp;</code> or <code>Database*</code>) to the forward-declared class in your header file. You cannot create a full object by value (e.g., <code>Database db;</code>) because the compiler wouldn't know how much memory to allocate.</li>
+                </ul>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Code Example: Deferring Includes to the .cpp File</div>
+                <p>
+                    Here is how you correctly structure the header and implementation files using a forward declaration, based on the <code>Viewer</code> and <code>Database</code> relationship:
+                </p>
+
+                <h5 style="margin-top: 1rem;">1. The Header File (<code>Viewer.h</code>)</h5>
+                <p>
+                    Notice that we <strong>do not</strong> <code>#include "Database.h"</code>. Instead, we simply declare <code>class Database;</code> to break the circular dependency loop.
+                </p>
+                <pre><code>#ifndef VIEWER_H_
+#define VIEWER_H_
+
+// Circular Referencing avoided.
+// Ideal method: Forward Declaration
+class Database; // &lt;-- Tells compiler "Database is a class"
+
+class Viewer {
+public:
+    // We can safely use a reference (Database&amp;) because a reference 
+    // is essentially just a memory address (pointer), which has a known, fixed size.
+    void display(const Database&amp; object);
+};
+
+#endif /* VIEWER_H_ */</code></pre>
+
+                <h5 style="margin-top: 1rem;">2. The Implementation File (<code>Viewer.cpp</code>)</h5>
+                <p>
+                    Inside the <code>.cpp</code> file, we actually need to <em>use</em> the <code>Database</code> object (e.g., accessing <code>object.data1</code>). Therefore, this is the safe place where we <strong>must</strong> fully <code>#include "Database.h"</code>.
+                </p>
+                <pre><code>#include &lt;iostream&gt;
+#include "Viewer.h"
+#include "Database.h" // Include the full definition here, where it's actually used
+
+void Viewer::display(const Database&amp; object) {
+    // Now the compiler knows exactly what 'Database' looks like,
+    // so we can access its internal member variables.
+    std::cout &lt;&lt; object.data1 &lt;&lt; std::endl;
+    std::cout &lt;&lt; object.data2 &lt;&lt; std::endl;
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 23</span>
+        </div>
+    </div>
+
+    <!-- PAGE 24: FUNCTION OVERLOADING -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.23 Function Overloading Resolution: How it Works</h3>
+            <p>
+                When you have multiple functions with the same name but different parameters (Function Overloading), C++ uses a strict, 4-step sequence to determine exactly which function to call. If the compiler reaches the end of the steps and finds multiple possible matches (ambiguity) or no matches at all, it throws a compile-time error.
+            </p>
+
+            <div class="report-box" style="border-left-color: #3b82f6; background-color: #eff6ff;">
+                <div class="report-box-title" style="color: #1d4ed8;">Step 1: Exact Match</div>
+                <p>
+                    C++ first tries to find an <strong>exact match</strong>. This is the case where the actual argument exactly matches the parameter type of one of the overloaded functions.
+                </p>
+                <pre><code>void print(char *value);
+void print(int value);
+
+print(0); // EXACT MATCH: Calls print(int) because 0 is an integer literal.</code></pre>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Step 2: Promotion (Implicit Casting)</div>
+                <p>
+                    If no exact match is found, C++ tries to find a match through <strong>promotion</strong>. Promotion is a safe, lossless conversion built into the C++ standard.
+                </p>
+                <table class="report-table" style="margin-bottom: 1rem;">
+                    <thead>
+                        <tr>
+                            <th>Original Type</th>
+                            <th>Promoted To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>char</code>, <code>unsigned char</code>, and <code>short</code></td>
+                            <td><code>int</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>unsigned short</code></td>
+                            <td><code>int</code> or <code>unsigned int</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>float</code></td>
+                            <td><code>double</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>enum</code></td>
+                            <td><code>int</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pre><code>void print(char *value);
+void print(int value);
+
+print('a'); // PROMOTION: 'a' is a char. No exact match for char.
+            // It gets safely promoted to int. Calls print(int).</code></pre>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Step 3: Standard Conversion</div>
+                <p>
+                    If no promotion is possible, C++ falls back to trying a <strong>standard conversion</strong>. This step can potentially result in data loss or unexpected behavior.
+                </p>
+                <ul style="margin-bottom: 1rem;">
+                    <li>Any numeric type will match any other numeric type (e.g., double to int).</li>
+                    <li>Enum will match any numeric type.</li>
+                    <li><strong>Zero (0)</strong> will match a pointer type and numeric type (e.g., 0 to <code>char*</code>, or 0 to <code>float</code>).</li>
+                    <li>A pointer will match a <code>void*</code> pointer.</li>
+                </ul>
+                <pre><code>// Example 1: Numeric standard conversion
+void print(char *value);
+void print(int value);
+
+print(10.5f); // 10.5f is a float. No exact match. No promotion to int exists.
+              // Standard conversion converts float to int (loses .5). Calls print(int).
+
+// Example 2: Enum standard conversion
+void print(char *value);
+void print(float value);
+
+enum Dummy { FIRST, SECOND };
+print(FIRST); // FIRST is an enum. Standard conversion allows Enum to match any numeric type.
+              // Calls print(float value).</code></pre>
+
+                <div class="report-box-title" style="margin-top: 1rem;">Important Pitfall: The Float vs. Double Literal</div>
+                <p>
+                    A very common mistake happens when you have a function that takes an <code>int</code> and a function that takes a <code>float</code>, but you type a decimal number without the <code>f</code> suffix (e.g., just typing <code>10.5</code>).
+                </p>
+                <ul>
+                    <li>In C++, any decimal literal typed as <code>10.5</code> is automatically a <strong><code>double</code></strong> by default, not a <code>float</code>.</li>
+                    <li>If you have <code>void func(int)</code> and you call <code>func(10.5)</code>, it uses standard conversion to convert the <code>double</code> into an <code>int</code>! It will keep going to the `int` function until you specify otherwise.</li>
+                    <li>If you have <em>both</em> <code>void func(int)</code> and <code>void func(float)</code> and you call <code>func(10.5)</code>, you will get a <strong>Compile-Time Ambiguity Error</strong> because converting a <code>double</code> to an <code>int</code> and a <code>double</code> to a <code>float</code> are both considered "Standard Conversions" with equal priority!</li>
+                    <li>To force it to use the float function, <strong>you must specify it yourself</strong> by appending the <code>f</code> suffix (e.g., <code>func(10.5f)</code>), which turns it into a <code>float</code> and triggers an Exact Match (Step 1).</li>
+                </ul>
+            </div>
+
+            <div class="report-box" style="border-left-color: #8b5cf6; background-color: #f5f3ff;">
+                <div class="report-box-title" style="color: #6d28d9;">Step 4: User-Defined Conversion</div>
+                <p>
+                    If no matches are found in the previous 3 steps, C++ finally tries to find a match through <strong>user-defined conversion</strong> (like single-argument constructors or custom conversion operators inside classes). If this step also fails, the compiler errors out.
+                </p>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 24</span>
+        </div>
+    </div>
+
+    <!-- PAGE 25: OPERATOR OVERLOADING -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.24 Operator Overloading: The <code>+</code> Operator</h3>
+            <p>
+                <strong>Why use it?</strong> C++ allows you to redefine the behavior of standard operators (like <code>+</code>, <code>-</code>, <code>==</code>) when applied to your own custom classes. The primary use case is to make your custom objects act like built-in primitive types, making the code vastly more intuitive and readable (e.g., writing <code>MyString c = a + b;</code> instead of a clunky function call like <code>MyString c = a.concatenate(b);</code>).
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">How to Make It: Implementing <code>operator+</code> for MyString</div>
+                <p>
+                    To concatenate two strings, we must allocate a new chunk of memory large enough to hold both strings, copy the characters over sequentially, and return a brand new object representing the result.
+                </p>
+                <pre><code>// Note: It returns a NEW MyString by value, and takes a const reference to avoid copying.
+MyString operator+(const MyString&amp; other) {
+    // 1. Allocate exact memory needed for both strings + 1 for the null terminator '\0'
+    char* newLiterals = new char[size + other.size + 1];
+
+    // 2. Copy the first string into the beginning of the new memory block
+    memcpy(newLiterals, Letters, size); 
+
+    // 3. Copy the second string directly after the first string
+    // We use &amp;newLiterals[size] to shift the destination pointer forward.
+    memcpy(&amp;newLiterals[size], other.Letters, other.size); 
+
+    // 4. Null-terminate the new string
+    newLiterals[size + other.size] = '\0';
+
+    // 5. Create the new combined object.
+    // (Assuming the MyString constructor makes its own deep copy of the passed string!)
+    MyString newObject(newLiterals);
+
+    // 6. CRITICAL: Prevent Memory Leaks!
+    // Since newObject made its own deep copy of the string, we MUST delete our temporary buffer.
+    delete[] newLiterals;
+
+    return newObject;
+}</code></pre>
+            </div>
+
+            <div class="report-box" style="border-left-color: #8b5cf6; background-color: #f5f3ff;">
+                <div class="report-box-title" style="color: #6d28d9;">Overloading the Operator for Different Types</div>
+                <p>
+                    You are not restricted to only adding a <code>MyString</code> to another <code>MyString</code>. You can overload the <code>operator+</code> multiple times to accept completely different data types, such as integers or characters. This is incredibly powerful for mixing types seamlessly (like appending an age to a name).
+                </p>
+                <pre><code>// Example: Appending a uint8_t (an 8-bit integer) to a MyString
+// Allows intuitive code like: MyString nameAndAge = nameObject + 26;
+MyString operator+(const uint8_t age) {
+    // 1. Allocate memory: Original size + 1 character for the age + 1 for '\0'
+    char* newLiterals = new char[size + 1 + 1]; 
+
+    // ... (Code to copy the original string and append the age character) ...
+    
+    MyString newObject(newLiterals);
+    delete[] newLiterals; // Always clean up the temporary buffer!
+    return newObject;
+}</code></pre>
+            </div>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Advanced: Operator Overloading with Two Different Classes (Using <code>friend</code>)</div>
+                <p>
+                    If you want to overload the <code>+</code> operator to add two entirely different classes together (e.g., <code>ClassA + ClassB</code>), a standard member function can be limiting. This is because <code>A + B</code> strictly evaluates to <code>A.operator+(B)</code>. 
+                </p>
+                <p>
+                    But what if you want to support <code>B + A</code> where B is a built-in primitive (e.g., <code>int + MyString</code>)? You cannot modify the built-in <code>int</code> class to add a member function! Furthermore, if you are adding <code>ClassA</code> and <code>ClassB</code>, the operator needs access to the private data of <em>both</em> classes.
+                </p>
+                <p>
+                    The solution is to use a <strong>global, non-member <code>friend</code> function</strong>. By declaring the global operator function as a <code>friend</code> inside both classes, the function can seamlessly access their private variables to perform the operation, regardless of order.
+                </p>
+                <pre><code>// Forward declaration
+class ClassB; 
+
+class ClassA {
+private:
+    int dataA = 10;
+    // Grant friendship to the global operator+ function
+    friend int operator+(const ClassA&amp; a, const ClassB&amp; b);
+};
+
+class ClassB {
+private:
+    int dataB = 20;
+    // Grant friendship to the exact same global function
+    friend int operator+(const ClassA&amp; a, const ClassB&amp; b);
+};
+
+// Global Non-Member Function
+// Because it is a "friend" of both classes, it can access dataA and dataB directly!
+int operator+(const ClassA&amp; a, const ClassB&amp; b) {
+    return a.dataA + b.dataB; 
+}
+
+int main() {
+    ClassA a;
+    ClassB b;
+    int result = a + b; // Evaluates to the global: operator+(a, b)
+}</code></pre>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Under the Hood: The Lifecycle of <code>hello + world</code></div>
+                <p>
+                    What exactly happens in memory when you execute <code>MyString helloworld = hello + world;</code>? If we turn off compiler optimizations (using <code>-fno-elide-constructors</code> to disable RVO), the creation process involves many hidden copies:
+                </p>
+                <pre><code>MyString hello = "Hello";
+MyString world = " World";
+MyString helloworld = hello + world; // Evaluates to hello.operator+(world)
+helloworld.print();
+
+/** SEQUENCE OF EVENTS (Optimization OFF):
+ * 1. Non default ctor           (Creates 'hello')
+ * 2. Non default ctor           (Creates 'world')
+ * 3. Operator +                 (Executes our custom function)
+ * 4. Non default ctor           (Creates 'newObject' inside operator+)
+ * &gt;&gt; Copy Constructor           (Copies 'newObject' to a hidden temporary return location)
+ * 5. Destructor of newObject    (operator+ finishes, 'newObject' dies)
+ * &gt;&gt; Copy Constructor           (Copies the hidden temporary into 'helloworld')
+ * 
+ * 6. print hello World          (Prints the final concatenated string)
+ * 7. Destructors                (Destroys hello, world, and helloworld at end of scope)
+ */</code></pre>
+                <p style="margin-top: 1rem; margin-bottom: 0;">
+                    <em>Note: In modern C++, Return Value Optimization (RVO) automatically eliminates Step 5 and both Copy Constructors, constructing the result directly into <code>helloworld</code>!</em>
+                </p>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 25</span>
+        </div>
+    </div>
+
+    <!-- PAGE 26: OVERLOADING THE STREAM INSERTION OPERATOR -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.25 Overloading the Stream Insertion Operator (<code>&lt;&lt;</code>)</h3>
+            <p>
+                When you build a custom class like <code>MyString</code>, you naturally want to print it to the console using <code>std::cout &lt;&lt; myStringObj;</code>. However, <code>std::cout</code> (which is an object of type <code>std::ostream</code>) has no idea how to print your custom class. To fix this, you must overload the <code>&lt;&lt;</code> operator specifically for <code>std::ostream</code>.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">The Function Signature Explained</div>
+                <p>
+                    Overloading <code>&lt;&lt;</code> <strong>must</strong> be done as a global <code>friend</code> function, not a member function. This is because the left operand of <code>&lt;&lt;</code> is <code>std::cout</code> (an <code>ostream</code> object), not your <code>MyString</code> object. Since we cannot modify the C++ Standard Library's <code>ostream</code> class to add a member function, we use a global friend function instead.
+                </p>
+                <pre><code>friend std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, const MyString&amp; other) {
+    out &lt;&lt; other.Letters; // Directly accessing the private character array
+    return out;
+}</code></pre>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Parameter Breakdown</div>
+                <ul>
+                    <li>
+                        <strong>Parameter 1: <code>std::ostream&amp; out</code></strong><br>
+                        This is the output stream object (usually <code>std::cout</code>) that is placed on the left side of the <code>&lt;&lt;</code> operator. <br>
+                        <em>Why the <code>&amp;</code>?</em> We must pass the stream by reference because printing to a stream inherently modifies its internal state (like error flags, write positions, and buffers). Streams fundamentally cannot be copied in C++.
+                    </li>
+                    <li style="margin-top: 10px;">
+                        <strong>Parameter 2: <code>const MyString&amp; other</code></strong><br>
+                        This is your custom object placed on the right side of the <code>&lt;&lt;</code> operator.<br>
+                        <em>Why <code>const &amp;</code>?</em> We pass it by reference for performance (to avoid an expensive deep copy), and we make it <code>const</code> because printing an object should never accidentally modify its contents.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">The Return Type: Why return <code>std::ostream&amp;</code>?</div>
+                <p>
+                    You might wonder why the function doesn't just return <code>void</code>. The answer is to allow <strong>operator chaining</strong> (cascading).
+                </p>
+                <p>
+                    Consider this common statement: <code>std::cout &lt;&lt; myString1 &lt;&lt; myString2;</code>
+                </p>
+                <ol>
+                    <li>The compiler evaluates the first part (left-to-right): <code>(std::cout &lt;&lt; myString1)</code>.</li>
+                    <li>This calls our overloaded operator, which prints the string and then <strong>returns a reference to <code>std::cout</code></strong>.</li>
+                    <li>The equation simplifies to: <code>std::cout &lt;&lt; myString2;</code>.</li>
+                    <li>This enables the chain to continue indefinitely! If our operator returned <code>void</code>, the second <code>&lt;&lt;</code> would throw a syntax error because you cannot use the <code>&lt;&lt;</code> operator on a <code>void</code> type.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 26</span>
+        </div>
+    </div>
+
+    <!-- PAGE 27: UNARY OPERATOR OVERLOADING -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.26 Unary Operators: The "Empty" Argument Rule</h3>
+            <p>
+                When overloading arithmetic operators, there are absolutely no restrictions on the return type or the argument types you can use. However, there is a strict limitation on the <em>number</em> of arguments: an overloaded member operator must take either exactly 1 argument or <strong>0 arguments</strong>.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Why Zero Arguments? (Unary Overloading)</div>
+                <p>
+                    If an operator is a member function, it already has an implicit left-hand operand: the object itself (accessed via the hidden <code>this</code> pointer). 
+                </p>
+                <ul>
+                    <li><strong>Binary Operators (e.g., <code>A + B</code>):</strong> Require <strong>1 argument</strong> because the left side is implicitly <code>this</code>, and the right side <code>B</code> must be passed in as the single argument.</li>
+                    <li><strong>Unary Operators (e.g., <code>-A</code> or <code>+A</code>):</strong> Require <strong>0 arguments</strong> because there is no right-hand operand! The operator only applies to the object itself (<code>this</code>).
+                    </li>
+                </ul>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Code Example: Unary vs. Binary Overloading</div>
+                <pre><code>class Dummy {
+    int num = 10;
+public:
+    // BINARY OPERATOR (Takes 1 argument)
+    // Usage: Dummy obj; obj + 5.5f; 
+    string operator+(float x) {
+        return to_string(num + x);
+    }
+
+    // BINARY OPERATOR (Takes 1 argument)
+    // Usage: Dummy obj; obj + "5";
+    int operator+(string x) {
+        return num + stoi(x);
+    }
+
+    // UNARY OPERATOR (Takes 0 arguments!)
+    // Usage: Dummy obj; -obj;
+    int operator-() {
+        return -num; // Flips the sign of the internal number
+    }
+
+    // UNARY OPERATOR (Takes 0 arguments!)
+    // Usage: Dummy obj; +obj;
+    int operator+() {
+        return +num; // Returns the positive internal number
+    }
+};
+
+int main() {
+    // This cleanly evaluates the Unary (-) operator, then the Unary (+) operator,
+    // and prints both results to the console.
+    std::cout &lt;&lt; -Dummy() &lt;&lt; " " &lt;&lt; +Dummy(); // Prints: -10 10
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 27</span>
+        </div>
+    </div>
+
+    <!-- PAGE 28: CASE STUDY - CONTAINERS -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.27 Real-World Case Study: Operator Overloading in Containers</h3>
+            <p>
+                One of the most powerful and common applications of Operator Overloading is when building custom <strong>Containers</strong>. A container is simply a class that manages a collection of other objects (like an array or a <code>std::vector</code>). 
+            </p>
+            <p>
+                By overloading operators in both the data objects and the container itself, we can create incredibly intuitive, clean, and highly readable APIs.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">1. The Data Object (<code>Task</code>)</div>
+                <p>
+                    First, we define the object that will be stored. Here, we have a <code>Task</code> class with a <code>priority</code> integer. By overloading the <strong>Less Than operator (<code>&lt;</code>)</strong>, we teach C++ exactly how to compare two tasks.
+                </p>
+                <pre><code>class Task {
+public:
+    int priority;
+    Task(const int p) : priority(p) {}
+
+    // Overloading the &lt; operator
+    // Allows intuitive comparisons like: if (taskA &lt; taskB)
+    bool operator&lt;(const Task&amp; other) {
+        return priority &lt; other.priority;
+    }
+
+    // (We would also overload the &lt;&lt; stream operator here to print the task)
+    friend std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, const Task&amp; task);
+};</code></pre>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">2. The Container Object (<code>Container</code>)</div>
+                <p>
+                    Next, we define a <code>Container</code> class that holds an array (or <code>std::vector</code>) of these <code>Task</code> objects. We overload the <strong>Insertion operator (<code>&lt;&lt;</code>)</strong> specifically for this class to act as an intuitive way to "push" new tasks into the container.
+                </p>
+                <pre><code>class Container {
+private:
+    std::vector&lt;Task&gt; vec; // Array of objects
+
+public:
+    // Overloading the &lt;&lt; operator to act as a "push_back" function!
+    // Usage: myContainer &lt;&lt; Task(1);
+    Container&amp; operator&lt;&lt;(const Task task) { 
+        vec.push_back(task);
+        return *this; // Return by reference to allow chaining: myContainer &lt;&lt; t1 &lt;&lt; t2;
+    }
+
+    // Utilizing the overloaded &lt; operator from the Task class
+    void printMinimum() {
+        if (vec.empty()) return;
+
+        Task minValue = vec[0];
+        for (size_t i = 0; i &lt; vec.size(); i++) {
+            // MAGIC: Because we overloaded &lt; in the Task class,
+            // we can cleanly compare them right here!
+            // The compiler translates this to: vec[i].operator&lt;(minValue)
+            if (vec[i] &lt; minValue) { 
+                minValue = vec[i];
+            }
+        }
+        // std::cout &lt;&lt; "Minimum priority task: " &lt;&lt; minValue &lt;&lt; std::endl;
+    }
+};</code></pre>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">Why is this so powerful?</div>
+                <p style="margin-bottom: 0;">
+                    Without operator overloading, the container code would be extremely verbose. We would have to write <code>myContainer.pushBack(Task(1));</code> to insert items, and <code>if (vec[i].getPriority() &lt; minValue.getPriority())</code> to compare them. By cleverly overloading operators, the logic becomes self-documenting and behaves exactly like built-in C++ mechanics.
+                </p>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 28</span>
+        </div>
+    </div>
+
+    <!-- PAGE 29: THE FAMOUS FIVE OPERATORS -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.28 The "Famous Five": Essential Operator Overloads</h3>
+            <p>
+                To make a custom class truly feel like a built-in C++ type, there are five "famous" operators that are overloaded more frequently than any others. Below is a comprehensive example of a <code>StringList</code> class that implements all five, explaining the syntax, return types, and use cases for each.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Code Example: Implementing the Famous Five</div>
+                <pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;string&gt;
+
+class StringList {
+private:
+    std::vector&lt;std::string&gt; items;
+
+public:
+    // 1. The Subscript Operator: operator[]
+    // MUST return by reference (std::string&amp;) to allow modifying the array element!
+    std::string&amp; operator[](const int index) {
+        return items[index]; 
+    }
+
+    // 2. The Arithmetic/Concatenation Operator: operator+
+    // Returns a brand NEW object by value.
+    StringList operator+(const std::string&amp; newItem) {
+        StringList newList = *this; // Copy current list
+        newList.items.push_back(newItem);
+        return newList;
+    }
+
+    // 3. The Prefix Increment Operator: ++operator
+    // Returns a reference to the modified object (*this).
+    StringList&amp; operator++() {
+        for(auto&amp; item : items) item += "+"; // Appends '+' to every string
+        return *this;
+    }
+
+    // 4. The Postfix Increment Operator: operator++(int)
+    // The 'int' parameter is a dummy variable just to distinguish it from Prefix.
+    // Returns the OLD object by value, THEN modifies the current object.
+    StringList operator++(int) {
+        StringList oldState = *this; // Save the old state
+        ++(*this);                   // Use prefix to modify current state
+        return oldState;             // Return the UNMODIFIED old state
+    }
+
+    // 5. The Stream Insertion Operator: operator&lt;&lt;
+    // Must be a global friend function to accept std::ostream as the left operand.
+    friend std::ostream&amp; operator&lt;&lt;(std::ostream&amp; out, const StringList&amp; list) {
+        out &lt;&lt; "[";
+        for(const auto&amp; item : list.items) out &lt;&lt; item &lt;&lt; " ";
+        out &lt;&lt; "]";
+        return out;
+    }
+};</code></pre>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Detailed Breakdown of Each Operator</div>
+                <ul>
+                    <li>
+                        <strong>1. <code>operator[]</code> (Subscript)</strong><br>
+                        <em>Use Case:</em> <code>myList[0] = "Hello";</code><br>
+                        <em>Key Concept:</em> Notice that it returns <code>std::string&amp;</code> (a reference). If it returned by value, you would be modifying a temporary copy, and <code>myList[0] = "X"</code> would do nothing to the actual list! Returning a reference returns the actual memory location of the item in the array, exactly as noted in your course slides.
+                    </li>
+                    <li style="margin-top: 10px;">
+                        <strong>2. <code>operator+</code> (Arithmetic)</strong><br>
+                        <em>Use Case:</em> <code>StringList newList = oldList + "World";</code><br>
+                        <em>Key Concept:</em> Mathematical operations should never modify the original variables. Therefore, it creates a copy, modifies the copy, and returns the new copy by value.
+                    </li>
+                    <li style="margin-top: 10px;">
+                        <strong>3. <code>operator++()</code> (Prefix Increment)</strong><br>
+                        <em>Use Case:</em> <code>++myList;</code><br>
+                        <em>Key Concept:</em> Prefix directly modifies the object and returns the object itself. It returns <code>*this</code> by reference (<code>StringList&amp;</code>) for high performance.
+                    </li>
+                    <li style="margin-top: 10px;">
+                        <strong>4. <code>operator++(int)</code> (Postfix Increment)</strong><br>
+                        <em>Use Case:</em> <code>myList++;</code><br>
+                        <em>Key Concept:</em> Postfix requires returning the state of the object <em>before</em> it was modified. It takes a dummy <code>int</code> parameter solely so the compiler can tell it apart from the Prefix version. It creates a copy, modifies the original, and returns the old copy by value.
+                    </li>
+                    <li style="margin-top: 10px;">
+                        <strong>5. <code>operator&lt;&lt;</code> (Stream Insertion)</strong><br>
+                        <em>Use Case:</em> <code>std::cout &lt;&lt; myList;</code><br>
+                        <em>Key Concept:</em> It must be a global <code>friend</code> function because the left side is <code>std::cout</code>. It returns <code>std::ostream&amp;</code> to allow cascading multiple prints on the same line.
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 29</span>
+        </div>
+    </div>
+
+    <!-- PAGE 30: THE POINTER TRAP -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.29 The Pointer Trap: Using Operators on Pointers</h3>
+            <p>
+                A very common and dangerous mistake when dealing with operator overloading is attempting to use an overloaded operator directly on a <strong>pointer</strong> instead of the object itself.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Code Example: The Compilation Error</div>
+                <p>
+                    Consider a class <code>IntList</code> that correctly overloads the <code>[]</code> operator. Look at what happens if we create the object dynamically using <code>new</code>:
+                </p>
+                <pre><code>class IntList {
+private:
+    int list[5] = {1, 2, 3, 4, 5};
+public:
+    int&amp; operator[](int index) {
+        return list[index];
+    }
+};
+
+int main() {
+    IntList *list = new IntList();
+    
+    // TRAP: Does this call the overloaded operator[]?
+    list[2] = 10; 
+}</code></pre>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Why this Fails to Compile</div>
+                <ul>
+                    <li>Because <code>list</code> is a pointer, the compiler treats it as a standard C-array of <code>IntList</code> objects in memory.</li>
+                    <li><code>list[2]</code> is standard pointer arithmetic. It literally translates to: <em>"Give me the 3rd <code>IntList</code> object in memory."</em> It does <strong>not</strong> call your overloaded <code>operator[]</code>.</li>
+                    <li>Therefore, <code>list[2]</code> evaluates to an <code>IntList</code> object. The statement becomes: <code>[IntList Object] = 10;</code></li>
+                    <li>This causes a <strong>Compilation Error</strong> because you are trying to assign an integer (<code>10</code>) to an <code>IntList</code> object, and there is no conversion constructor or assignment operator to handle that.</li>
+                    <li><em>(Note: Even if it did compile, it would instantly crash with a Segmentation Fault because <code>new IntList()</code> only allocated memory for ONE object, so trying to access the 3rd object accesses unallocated memory!)</em></li>
+                </ul>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">The Solution: Dereference First!</div>
+                <p>
+                    To successfully call an overloaded operator on a dynamically allocated object, you must <strong>dereference the pointer first</strong> by wrapping it in parentheses.
+                </p>
+                <pre><code>int main() {
+    IntList *list = new IntList();
+    
+    // CORRECT:
+    // 1. (*list) gives you the actual object.
+    // 2. [2] then successfully calls your overloaded operator[].
+    (*list)[2] = 10;
+    
+    std::cout &lt;&lt; (*list)[2]; // Prints 10 safely
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 30</span>
+        </div>
+    </div>
+
+    <!-- PAGE 31: THE COPY ASSIGNMENT OPERATOR -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.30 The Copy Assignment Operator (<code>operator=</code>)</h3>
+            <p>
+                While we extensively covered the <strong>Copy Constructor</strong> in Section 1.16, there is another deeply related function that is equally critical when dealing with pointers and dynamic memory: The <strong>Copy Assignment Operator</strong>.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Copy Constructor vs. Copy Assignment</div>
+                <ul>
+                    <li><strong>Copy Constructor:</strong> Called when creating a <em>brand new object</em> from an existing one.<br>
+                    Example: <code>MyString a = b;</code> (Because <code>a</code> is being created on this line).</li>
+                    <li><strong>Copy Assignment (<code>operator=</code>):</strong> Called when replacing the data of an <em>already existing object</em> with the data from another object.<br>
+                    Example: <code>a = b;</code> (Because <code>a</code> was already created earlier, and we are just reassigning it).</li>
+                </ul>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Implementing the Assignment Operator</div>
+                <p>
+                    Unlike the Copy Constructor (which starts with empty memory), the Assignment Operator must deal with the fact that the object <em>already has data</em>. If that data is a dynamic array (like in <code>MyString</code>), you must delete the old memory before allocating the new memory to prevent massive memory leaks!
+                </p>
+                <pre><code>// Overloading the Assignment Operator for deep copying
+void operator=(const MyString&amp; other) {
+    
+    // STEP 1: CLEAN UP EXISTING MEMORY
+    // Because this object already exists, it might already hold a string.
+    // We must delete the old string before we copy the new one!
+    if (literals != nullptr) {
+        delete[] literals;
+    }
+    size = 0;
+
+    // STEP 2: DEEP COPY THE NEW MEMORY
+    // Exactly like the Copy Constructor, we allocate fresh memory 
+    // and copy the actual characters over using memcpy.
+    literals = new char[other.size + 1];
+    size = other.size;
+    
+    memcpy(literals, other.literals, other.size);
+    
+    // Null-terminate the string
+    literals[size] = '\0';
+}</code></pre>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">The Rule of Three (C++ Best Practice)</div>
+                <p>
+                    In C++, there is a famous rule called <strong>The Rule of Three</strong>. It states that if your class manages dynamic memory (pointers) and requires you to write <em>any one</em> of the following three functions, you almost certainly need to write <strong>all three</strong>:
+                </p>
+                <ol>
+                    <li><strong>The Destructor:</strong> To free the memory when the object dies.</li>
+                    <li><strong>The Copy Constructor:</strong> To perform a Deep Copy when creating new objects.</li>
+                    <li><strong>The Copy Assignment Operator (<code>=</code>):</strong> To perform a Deep Copy (after cleaning up) when reassigning existing objects.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 31</span>
+        </div>
+    </div>
+
+    <!-- PAGE 32: INITIALIZATION VS ASSIGNMENT -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.31 Initialization vs. Assignment (The <code>=</code> Trap)</h3>
+            <p>
+                When dealing with the Assignment Operator (<code>operator=</code>), there is a very common misconception regarding the equals sign (<code>=</code>). Consider the following piece of code:
+            </p>
+            <pre><code>MyString name4 = "hi";
+MyString name3("hi");</code></pre>
+            <p>
+                Why is the assignment operator (<code>operator=</code>) <strong>not</strong> called for <code>name4</code>, even though there is a clear equals sign? The answer lies in a fundamental rule of C++: the strict difference between <strong>Initialization</strong> and <strong>Assignment</strong>.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">The Core Rule: Creation vs. Modification</div>
+                <ul>
+                    <li><strong>Initialization</strong> occurs when a <em>brand new</em> object is being created from scratch. The Assignment Operator is NEVER used to create a new object.</li>
+                    <li><strong>Assignment</strong> occurs when replacing the value of an <em>already existing, fully constructed</em> object.</li>
+                </ul>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Breaking Down the Examples</div>
+                <ol>
+                    <li>
+                        <strong><code>MyString name4 = "hi";</code> (Copy Initialization)</strong><br>
+                        Because <code>name4</code> is being declared and created on this exact line, C++ treats this strictly as <em>initialization</em>. Even with the <code>=</code>, this line simply tells the compiler to create a new <code>MyString</code> object. Depending on your C++ version, the compiler will conceptually create a temporary object and copy-construct it, or (in modern C++) optimize it completely into a direct constructor call. <em>It does not call <code>operator=</code>.</em>
+                    </li>
+                    <li style="margin-top: 10px;">
+                        <strong><code>MyString name3("hi");</code> (Direct Initialization)</strong><br>
+                        This line is much more explicit. It bypasses the confusing <code>=</code> sign entirely and tells the compiler to create a new <code>MyString</code> object and directly pass the string literal into its constructor.
+                    </li>
+                </ol>
+                <p style="margin-top: 1rem; margin-bottom: 0;">
+                    <em>Note: In modern C++, both lines usually compile down to the exact same machine code, directly calling the normal constructor (e.g., <code>MyString(const char*)</code>).</em>
+                </p>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">When is the Assignment Operator actually called?</div>
+                <p>
+                    For the Assignment Operator to be invoked, the object must have already been constructed on a previous line before you use the <code>=</code> sign.
+                </p>
+                <pre><code>// 1. Initialization (Calls the Default Constructor to create the object)
+MyString name5; 
+
+// 2. ASSIGNMENT!
+// (Calls operator= because name5 already exists, and we are replacing its value)
+name5 = "hi"; </code></pre>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 32</span>
+        </div>
+    </div>
+
+</body>
+</html>
