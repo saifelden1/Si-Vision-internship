@@ -602,6 +602,16 @@
                         <span class="toc-dots"></span>
                         <span class="toc-page">32</span>
                     </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.32 Inheritance: The Child Copy Constructor Fallback</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">33</span>
+                    </div>
+                    <div class="toc-item toc-subitem">
+                        <span class="toc-name">1.33 Inheritance Rules: Special Functions &amp; Upcasting</span>
+                        <span class="toc-dots"></span>
+                        <span class="toc-page">34</span>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -3453,6 +3463,155 @@ name5 = "hi"; </code></pre>
         <div class="page-footer">
             <span>Confidential -- Internal Training Use Only</span>
             <span>Page 32</span>
+        </div>
+    </div>
+
+    <!-- PAGE 33: CHILD COPY CONSTRUCTOR FALLBACK -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.32 Inheritance: The Child Copy Constructor Fallback</h3>
+            <p>
+                When a <strong>copy constructor</strong> of a child (derived) class is invoked, the compiler automatically calls the <strong>default constructor</strong> of the parent (base) class, unless you explicitly tell it otherwise. This behavior frequently catches developers off guard because they assume that copying a child object would seamlessly copy the parent portion as well.
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Why Does This Happen?</div>
+                <p>
+                    Constructor initialization works in a top-down order (Base &rarr; Derived). If you write a child copy constructor like this:
+                </p>
+                <pre><code>Derived(const Derived&amp; other) {
+    // Member-wise copying for child variables...
+}</code></pre>
+                <p style="margin-bottom: 0;">
+                    Because you didn't explicitly instruct the compiler on how to construct the base class part using <code>other</code>, the compiler steps in and inserts a silent call to the <strong>default constructor</strong> (<code>Base()</code>) for the base sub-object, wiping out whatever data you intended to copy from the parent!
+                </p>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Code Example: The Silent Data Loss</div>
+                <pre><code>class Base {
+public:
+    int baseVar;
+    Base() { baseVar = 0; } // Default Constructor
+    Base(int v) : baseVar(v) {} // Parameterized Constructor
+    Base(const Base&amp; other) : baseVar(other.baseVar) {} // Copy Constructor
+};
+
+class Derived : public Base {
+public:
+    int derivedVar;
+    Derived(int b, int d) : Base(b), derivedVar(d) {}
+
+    // BUGGY COPY CONSTRUCTOR:
+    // Since 'Base(other)' is NOT written here, C++ automatically calls Base()!
+    Derived(const Derived&amp; other) : derivedVar(other.derivedVar) {}
+};
+
+int main() {
+    Derived obj1(10, 20);
+    
+    // Copying obj1 into obj2
+    Derived obj2 = obj1; 
+    
+    // Output is 0! The parent's state was wiped out by the default constructor.
+    std::cout &lt;&lt; obj2.baseVar; 
+}</code></pre>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">The Fix: Explicitly Delegate to the Parent</div>
+                <p>
+                    To ensure the parent part is properly copied, you must explicitly delegate to the parent's copy constructor in the child's initialization list. You do this by passing the child object (which safely upcasts to a base reference) directly to it.
+                </p>
+                <pre><code>class Derived : public Base {
+public:
+    // FIXED COPY CONSTRUCTOR:
+    // We explicitly call the Base Copy Constructor!
+    Derived(const Derived&amp; other) 
+        : Base(other),               // &lt;--- The Fix
+          derivedVar(other.derivedVar) 
+    {}
+};</code></pre>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 33</span>
+        </div>
+    </div>
+
+    <!-- PAGE 34: INHERITANCE RULES: SPECIAL FUNCTIONS & UPCASTING -->
+    <div class="page page-break">
+        <div class="page-header">
+            <span>SIvision Academy -- C++ Course</span>
+            <span>Technical Report</span>
+        </div>
+
+        <div style="margin-top: 15mm;">
+            <h3>1.33 Inheritance Rules: Special Functions &amp; Upcasting</h3>
+            <p>
+                When building upon the previous section's rule about having to manually call the Parent's copy constructor from the Child, two major questions arise: <em>Why wasn't the Parent's copy constructor inherited automatically?</em> and <em>How is it legal to pass a Child object into a Parent constructor?</em>
+            </p>
+
+            <div class="report-box danger">
+                <div class="report-box-title">Rule 1: Special Member Functions are NEVER Inherited</div>
+                <p>
+                    When a child class inherits from a base class, it inherits almost everything (variables, normal member functions, etc.). However, there is a strict list of <strong>Special Member Functions</strong> that are strictly <strong>NOT inherited</strong>:
+                </p>
+                <ul>
+                    <li><strong>Constructors</strong> (Default, Parameterized)</li>
+                    <li><strong>Copy Constructors</strong></li>
+                    <li><strong>Move Constructors</strong></li>
+                    <li><strong>Assignment Operators</strong> (<code>operator=</code>)</li>
+                    <li><strong>Destructors</strong></li>
+                </ul>
+                <p style="margin-top: 10px; margin-bottom: 0;">
+                    <em>Why?</em> Because these functions are intrinsically tied to the exact structure and name of a specific class. A <code>Derived</code> class cannot use a <code>Base()</code> constructor to build itself because <code>Base()</code> doesn't know how to allocate memory for the new <code>Derived</code>-specific variables.
+                </p>
+            </div>
+
+            <div class="report-box" style="background-color: #f8fafc; border-left-color: #64748b;">
+                <div class="report-box-title" style="color: #475569;">Rule 2: The Magic of Upcasting (Object Slicing)</div>
+                <p>
+                    In Section 1.32, we fixed the buggy copy constructor by explicitly writing: <code>Base(other)</code>, where <code>other</code> is of type <code>Derived</code>. <br><br>
+                    But the <code>Base</code> copy constructor expects a <code>Base&amp;</code>, not a <code>Derived&amp;</code>! How does the compiler know what to do when we pass it the wrong type of object?
+                </p>
+                <ul>
+                    <li>
+                        <strong>The "IS-A" Relationship:</strong> Because <code>Derived</code> publicly inherits from <code>Base</code>, C++ guarantees that every <code>Derived</code> object literally <em>contains</em> a complete <code>Base</code> object inside of it. Therefore, <code>Derived</code> <strong>IS A</strong> <code>Base</code>.
+                    </li>
+                    <li style="margin-top: 10px;">
+                        <strong>Upcasting &amp; Slicing:</strong> When you pass the <code>Derived</code> object into the <code>Base</code> constructor, C++ performs an automatic, safe conversion called <strong>Upcasting</strong>. The <code>Base</code> copy constructor looks at the <code>Derived</code> object, conceptually "slices off" all the child-specific variables (ignoring them entirely), and focuses only on copying the parent variables it recognizes.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="report-box" style="border-left-color: #16a34a; background-color: #f0fdf4;">
+                <div class="report-box-title" style="color: #16a34a;">Bringing it all together (The MyString Example)</div>
+                <pre><code>// 1. The Parent Copy Constructor (Expects a const MyString&amp;)
+MyString(const MyString&amp; source) { ... }
+
+// 2. The Child Copy Constructor (Receives a const MyStringImproved&amp;)
+MyStringImproved(const MyStringImproved&amp; other) 
+    : MyString(other), // &lt;-- UPCASTING IN ACTION!
+      ptr(new int)
+{
+    // MyString(other) cleanly sliced off 'ptr' and copied the base string data.
+    // Now we just manually copy the child-specific data:
+    memcpy(ptr, other.ptr, 4); 
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential -- Internal Training Use Only</span>
+            <span>Page 34</span>
         </div>
     </div>
 
